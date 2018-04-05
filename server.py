@@ -41,16 +41,18 @@ DATABASEURI = "postgresql://rh2805:8420@35.227.79.146/proj1part2"
 # This line creates a database engine that knows how to connect to the URI above.
 #
 engine = create_engine(DATABASEURI)
-
+conn = engine.connect();
 #
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
-#
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+
+
+
+#engine.execute("""CREATE TABLE IF NOT EXISTS test (
+#  id serial,
+#  name text
+#);""")
+#engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
 
 @app.before_request
@@ -113,10 +115,10 @@ def index():
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM test")
+  cursor = g.conn.execute("SELECT artwork_id FROM artworks_is_at")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append(result['artwork_id'])  # can also be accessed using result[0]
   cursor.close()
 
   #
@@ -162,9 +164,23 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
-@app.route('/another')
-def another():
-  return render_template("another.html")
+
+
+#@app.route('/another')
+#def another():
+#  return render_template("another.html")
+
+#@app.route('/newuser')
+#def newuser():
+#  return render_template("newuser.html")
+
+
+@app.route('/recommendmuseum',methods = ['POST'])
+def recommendmuseum():
+  museumname = request.form.get('get_museumname')
+
+  
+
 
 
 # Example of adding new data to the database
