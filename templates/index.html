@@ -17,7 +17,7 @@
     {% endfor %}
   </div>-->
 
-  <h2>Search by name
+  <h2>Search for museums</h2>
   <form method="POST" action="/recommendmuseum">
     <p>Select name of museum<br>
     <select name="get_museumname">
@@ -37,10 +37,9 @@
 
   <form method="POST" action="/recommendmuseum">
     <p>Select CU discount options<br>
-    <select name="get_discount">
+    <select name="get_museumdiscount">
     <option value="all" selected>CU Discount does not matter</option>
     <option value="true">Must have discount for CU ID Holders</option>
-    <option value="false">Must not have discount for CU ID Holders</option>
     <br></select></p>
 
     <input type="submit" value="Search for Museum">
