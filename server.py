@@ -18,6 +18,8 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
+import pandas as pd
+import numpy as np
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -177,10 +179,34 @@ def index():
 
 @app.route('/recommendmuseum',methods = ['POST'])
 def recommendmuseum():
-  museumname = request.form.get('get_museumname')
+	museumname = request.form.get('get_museumname')
+  	if museumname=="all":
+  		museumquery = conn.execute("SELECT M.name as mname, M.location as mlocation, M.cu_discount as mdiscount FROM museums M")
+  	else:
+  		museumquery = conn.execute("SELECT M.name as mname, M.location as mlocation, M.cu_discount as mdiscount FROM museums M WHERE M.name = '{}'".format(museumname))
+  	
+  	m_name = []
+  	m_location = []
+  	m_free = []
 
+  	for q in museumquery:
+  		m_name.append(q['mname'])
+  		m_location.append(q['mlocation'])
+  		m_free.append(q['mdiscount'])
+  	
+  	mnames = np.asarray(m_name)
+  	mlocations = np.asarray(m_location)
+  	mdiscounts = np.asarray(m_free)
+
+  	df = pd.DataFrame(list(zip(mnames,mlocations,mdiscounts)),columns=['Museum Name', 'Museum Location', 'Discount'])
+	df.index = np.arange(1, len(df) + 1) 
   
+	if len(df)!=0:
+	    rec = 'Here are our recommendations:'
+	else:
+	    rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	return render_template("index.html", rec = rec, table = df.to_html())
 
 
 # Example of adding new data to the database

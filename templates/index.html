@@ -36,6 +36,13 @@
   <input type="submit" value="Search for Museum">
 </form>
 
+<div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+</div>
+
+
 
 <!--<p><a href="another">Go to the other page</a></p>-->
 
