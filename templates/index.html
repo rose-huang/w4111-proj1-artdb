@@ -17,24 +17,34 @@
     {% endfor %}
   </div>-->
 
-<form method="POST" action="/recommendmuseum">
-  <p>Select name of museum<br>
-  <select name="get_museumname">
-  <option value="all" selected>select</option>
-  <option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
-  <option value="Museum of Modern Art">Museum of Modern Art</option>
-  <option value="Whitney Museum of American Art">Whitney Museum of American Art</option>
-  <option value="Solomon R. Guggenheim Museum">Solomon R. Guggenheim Museum</option>
-  <option value="The Morgan Library & Museum">The Morgan Library & Museum</option>
-  <option value="Brooklyn Museum">Brooklyn Museum</option>
-  <option value="Cooper Hewitt, Smithsonian Design Museum">Cooper Hewitt, Smithsonian Design Museum</option>
-  <option value="The Frick Collection">The Frick Collection</option>
-  <option value="The Jewish Museum">The Jewish Museum</option>
-  <option value="American Folk Art Museum">American Folk Art Museum</option>
-  <br></select></p>
+  <h2>Search by name
+  <form method="POST" action="/recommendmuseum">
+    <p>Select name of museum<br>
+    <select name="get_museumname">
+    <option value="all" selected>select</option>
+    <option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
+    <option value="Museum of Modern Art">Museum of Modern Art</option>
+    <option value="Whitney Museum of American Art">Whitney Museum of American Art</option>
+    <option value="Solomon R. Guggenheim Museum">Solomon R. Guggenheim Museum</option>
+    <option value="The Morgan Library & Museum">The Morgan Library & Museum</option>
+    <option value="Brooklyn Museum">Brooklyn Museum</option>
+    <option value="Cooper Hewitt, Smithsonian Design Museum">Cooper Hewitt, Smithsonian Design Museum</option>
+    <option value="The Frick Collection">The Frick Collection</option>
+    <option value="The Jewish Museum">The Jewish Museum</option>
+    <option value="American Folk Art Museum">American Folk Art Museum</option>
+    <br></select></p>
 
-  <input type="submit" value="Search for Museum">
-</form>
+
+  <form method="POST" action="/recommendmuseum">
+    <p>Select CU discount options<br>
+    <select name="get_discount">
+    <option value="all" selected>CU Discount does not matter</option>
+    <option value="true">Must have discount for CU ID Holders</option>
+    <option value="false">Must not have discount for CU ID Holders</option>
+    <br></select></p>
+
+    <input type="submit" value="Search for Museum">
+  </form>
 
 <div>
     {% block content %}
@@ -46,9 +56,9 @@
 
 <!--<p><a href="another">Go to the other page</a></p>-->
 
-<form method="POST" action="/add">
+<!--<form method="POST" action="/add">
 <p>Name of new computer scientist: <input type="text" name="name"> <input type="submit" value="Add"></p>
-</form>
+</form>-->
 
 </body>
 
