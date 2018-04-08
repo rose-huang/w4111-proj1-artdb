@@ -45,7 +45,7 @@
 </form>
 
   <div>
-    {% block content %}
+    {% block artwork_id_content %}
     {{table | safe}}
     {% endblock %}
   </div>
@@ -68,7 +68,7 @@
   </form>
 
   <div>
-    {% block content %}
+    {% block medium_content %}
     {{table | safe}}
     {% endblock %}
   </div>
@@ -91,7 +91,7 @@
   </form>
 
   <div>
-    {% block content %}
+    {% block place_created_content %}
     {{table | safe}}
     {% endblock %}
   </div>
@@ -122,7 +122,7 @@
   </form>
 
   <div>
-    {% block content %}
+    {% block artwork_title_content %}
     {{table | safe}}
     {% endblock %}
   </div>
@@ -147,11 +147,11 @@
     <option value=1972>1972</option>
     <br></select></p>
 
-    <input type="submit" value="Search for artwork by title">
+    <input type="submit" value="Search for artwork by year">
   </form>
 
   <div>
-    {% block content %}
+    {% block artwork_year_content %}
     {{table | safe}}
     {% endblock %}
   </div>
