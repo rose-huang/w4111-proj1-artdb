@@ -17,11 +17,61 @@
     {% endfor %}
   </div>-->
 
+<!-- SEARCH FOR ARTWORKS -->
+  <h2>Search for artworks</h2>
+  <form method="POST" action="/recommendartwork">
+    <p>Select artwork id<br>
+    <select name="get_artwork_id">
+    <option value="all" selected>any</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13">13</option>
+    <option value="14">14</option>
+    <option value="15">15</option>
+    <option value="16">16</option>
+    <br></select></p>
+
+
+  <form method="POST" action="/recommendartwork">
+    <p>Select medium of artwork<br>
+    <select name="get_medium">
+    <option value="Oil on canvas">Oil on canvas</option>
+    <option value="Felt-tip pen and crayon on paper">Felt-tip pen and crayon on paper</option>
+    <option value="Pastel over lithograph">Pastel over lithograph</option>
+    <option value="Brush and oil paint, graphite on paperboard">Brush and oil paint, graphite on paperboard</option>
+    <option value="Oil and conté crayon on canvas">Oil and conté crayon on canvas</option>
+    <option value="Oil, aluminum, paint and wood on fabric">Oil, aluminum, paint and wood on fabric</option>
+    <option value="Ink and watercolor on paper">Ink and watercolor on paper</option>
+
+    <br></select></p>
+
+    <input type="submit" value="Search for Artwork">
+  </form>
+
+<div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+</div>
+
+
+
+<!-- SEARCH FOR MUSEUMS -->
   <h2>Search for museums</h2>
   <form method="POST" action="/recommendmuseum">
     <p>Select name of museum<br>
     <select name="get_museumname">
-    <option value="all" selected>select</option>
+    <option value="all" selected>any</option>
     <option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
     <option value="Museum of Modern Art">Museum of Modern Art</option>
     <option value="Whitney Museum of American Art">Whitney Museum of American Art</option>
@@ -50,6 +100,8 @@
     {{table | safe}}
     {% endblock %}
 </div>
+
+
 
 
 
