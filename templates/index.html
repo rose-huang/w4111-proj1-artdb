@@ -19,10 +19,10 @@
 
 <!-- SEARCH FOR ARTWORKS -->
   <h2>Search for artworks</h2>
-  <form method="POST" action="/recommendartwork">
-    <p>Select artwork id<br>
+  <form method="POST" action="/recommendartworkbyid">
+    <p>Search by artwork id<br>
     <select name="get_artwork_id">
-    <option value="all" selected>any</option>
+    <option value="all" selected>Any</option>
     <option value="1">1</option>
     <option value="2">2</option>
     <option value="3">3</option>
@@ -41,10 +41,20 @@
     <option value="16">16</option>
     <br></select></p>
 
+  <input type="submit" value="Search for artwork by artwork id">
+</form>
 
-  <form method="POST" action="/recommendartwork">
-    <p>Select medium of artwork<br>
+  <div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+  </div>
+
+
+  <form method="POST" action="/recommendartworkbymedium">
+    <p>Search by medium of artwork<br>
     <select name="get_medium">
+    <option value="all" selected>Any</option>
     <option value="Oil on canvas">Oil on canvas</option>
     <option value="Felt-tip pen and crayon on paper">Felt-tip pen and crayon on paper</option>
     <option value="Pastel over lithograph">Pastel over lithograph</option>
@@ -54,9 +64,97 @@
     <option value="Ink and watercolor on paper">Ink and watercolor on paper</option>
 
     <br></select></p>
-
-    <input type="submit" value="Search for Artwork">
+    <input type="submit" value="Search for artwork by medium">
   </form>
+
+  <div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+  </div>
+
+  <form method="POST" action="/recommendartworkbylocation">
+    <p>Search by place created for artwork<br>
+    <select name="get_place_created">
+    <option value="all" selected>Any</option>
+    <option value=NULL>Unknown</option>
+    <option value="San Giorgio Maggiore">San Giorgio Maggiore</option>
+    <option value="Paris">Paris</option>
+    <option value="London">London</option>
+    <option value="Saint Rémy">Saint Rémy</option>
+    <option value="Gardanne">Gardanne</option>
+    <option value="New York">New York</option>
+    <option value="Barranquilla">Barranquilla</option>
+
+    <br></select></p>
+    <input type="submit" value="Search for artwork by place created">
+  </form>
+
+  <div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+  </div>
+
+  <form method="POST" action="/recommendartworkbytitle">
+    <p>Search by title<br>
+    <select name="get_artwork_title">
+    <option value="all" selected>Any</option>
+    <option value="The Starry Night">The Starry Night</option>
+    <option value="The Persistence of Memory">The Persistence of Memory</option>
+    <option value="Self-Portrait">Self-Portrait</option>
+    <option value="Early Sunday Morning">Early Sunday Morning</option>
+    <option value="Mountains at Saint-Rémy">Mountains at Saint-Rémy</option>
+    <option value="The Palazzo Ducale, Seen from San Giorgio Maggiore">The Palazzo Ducale, Seen from San Giorgio Maggiore</option>
+    <option value="Mademoiselle Bécat at the Café des Ambassadeurs">Mademoiselle Bécat at the Café des Ambassadeurs</option>
+    <option value="Officer and Laughing Girl">Officer and Laughing Girl</option>
+    <option value="42nd Street New York Public Library">42nd Street New York Public Library</option>
+    <option value="Houses of Parliament, Sunlight Effect">Houses of Parliament, Sunlight Effect</option>
+    <option value="The Village of Gardanne">The Village of Gardanne</option>
+    <option value="Two Houses in Barranquilla, Colombia">Two Houses in Barranquilla, Colombia</option>
+    <option value="Lucy Hessel Reading">Lucy Hessel Reading</option>
+    <option value="Les Demoiselles d'Avignon">Les Demoiselles d'Avignon</option>
+    <option value="Alchemy">Alchemy</option>
+    <option value="Study for “Portrait of Chess Players”">Study for “Portrait of Chess Players”</option>
+    <br></select></p>
+
+    <input type="submit" value="Search for artwork by title">
+  </form>
+
+  <div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+  </div>
+
+    <form method="POST" action="/recommendartworkbyyear">
+    <p>Search by title<br>
+    <select name="get_year">
+    <option value="all" selected>Any</option>
+    <option value=1660>1660</option>
+    <option value=1885>1885</option>
+    <option value=1886>1886</option>
+    <option value=1889>1889</option>
+    <option value=1903>1903</option>
+    <option value=1907>1907</option>
+    <option value=1908>1908</option>
+    <option value=1911>1911</option>
+    <option value=1913>1913</option>
+    <option value=1917>1917</option>
+    <option value=1930>1930</option>
+    <option value=1931>1931</option>
+    <option value=1947>1947</option>
+    <option value=1972>1972</option>
+    <br></select></p>
+
+    <input type="submit" value="Search for artwork by title">
+  </form>
+
+  <div>
+    {% block content %}
+    {{table | safe}}
+    {% endblock %}
+  </div>
 
 
 
@@ -81,7 +179,6 @@
     <br></select></p>
 
 
-  <form method="POST" action="/recommendmuseum">
     <p>Select CU discount options<br>
     <select name="get_museumdiscount">
     <option value="all" selected>CU Discount does not matter</option>
@@ -91,11 +188,11 @@
     <input type="submit" value="Search for Museum">
   </form>
 
-<div>
+  <div>
     {% block content %}
     {{table | safe}}
     {% endblock %}
-</div>
+  </div>
 
 
 
