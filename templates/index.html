@@ -46,12 +46,12 @@
 
   <div>
     {% block artwork_id_content %}
-    {{artworktable | safe}}
+    {{table | safe}}
     {% endblock artwork_id_content %}
   </div>
 
 
-  <!--<form method="POST" action="/recommendartworkbymedium">
+  <form method="POST" action="/recommendartworkbymedium">
     <p>Search by medium of artwork<br>
     <select name="get_medium">
     <option value="all" selected>Any</option>
@@ -70,9 +70,10 @@
   <div>
     {% block medium_content %}
     {{table | safe}}
-    {% endblock %}
+    {% endblock medium_content %}
   </div>
 
+<!--
   <form method="POST" action="/recommendartworkbylocation">
     <p>Search by place created for artwork<br>
     <select name="get_place_created">
@@ -165,7 +166,7 @@
   <form method="POST" action="/recommendmuseum">
     <p>Select name of museum<br>
     <select name="get_museumname">
-    <option value="all" selected>any</option>
+    <option value="all" selected>Any</option>
     <option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
     <option value="Museum of Modern Art">Museum of Modern Art</option>
     <option value="Whitney Museum of American Art">Whitney Museum of American Art</option>
