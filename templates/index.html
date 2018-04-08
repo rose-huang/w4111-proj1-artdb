@@ -46,12 +46,12 @@
 
   <div>
     {% block artwork_id_content %}
-    {{table | safe}}
-    {% endblock %}
+    {{artworktable | safe}}
+    {% endblock artwork_id_content %}
   </div>
 
 
-  <form method="POST" action="/recommendartworkbymedium">
+  <!--<form method="POST" action="/recommendartworkbymedium">
     <p>Search by medium of artwork<br>
     <select name="get_medium">
     <option value="all" selected>Any</option>
@@ -161,7 +161,7 @@
 
 
 <!-- SEARCH FOR MUSEUMS -->
-  <h2>Search for museums</h2>
+  <!--<h2>Search for museums</h2>
   <form method="POST" action="/recommendmuseum">
     <p>Select name of museum<br>
     <select name="get_museumname">
@@ -192,7 +192,7 @@
     {% block content %}
     {{table | safe}}
     {% endblock %}
-  </div>
+  </div> -->
 
 
 
