@@ -46,7 +46,7 @@
 
   <div>
     {% block artwork_id_content %}
-    {{table | safe}}
+    {{artworkidtable | safe}}
     {% endblock artwork_id_content %}
   </div>
 
@@ -59,7 +59,7 @@
     <option value="Felt-tip pen and crayon on paper">Felt-tip pen and crayon on paper</option>
     <option value="Pastel over lithograph">Pastel over lithograph</option>
     <option value="Brush and oil paint, graphite on paperboard">Brush and oil paint, graphite on paperboard</option>
-    <option value="Oil and conté crayon on canvas">Oil and conté crayon on canvas</option>
+    <option value="Oil and conte crayon on canvas">Oil and conte crayon on canvas</option>
     <option value="Oil, aluminum, paint and wood on fabric">Oil, aluminum, paint and wood on fabric</option>
     <option value="Ink and watercolor on paper">Ink and watercolor on paper</option>
 
@@ -69,20 +69,20 @@
 
   <div>
     {% block medium_content %}
-    {{table | safe}}
+    {{artworkmediumtable | safe}}
     {% endblock medium_content %}
   </div>
 
-<!--
-  <form method="POST" action="/recommendartworkbylocation">
+
+  <form method="POST" action="/recommendartworkbyplacecreated">
     <p>Search by place created for artwork<br>
     <select name="get_place_created">
     <option value="all" selected>Any</option>
-    <option value=NULL>Unknown</option>
+    <!--<option value="NULL">Unknown</option>-->
     <option value="San Giorgio Maggiore">San Giorgio Maggiore</option>
     <option value="Paris">Paris</option>
     <option value="London">London</option>
-    <option value="Saint Rémy">Saint Rémy</option>
+    <option value="Saint Remy">Saint Remy</option>
     <option value="Gardanne">Gardanne</option>
     <option value="New York">New York</option>
     <option value="Barranquilla">Barranquilla</option>
@@ -93,13 +93,13 @@
 
   <div>
     {% block place_created_content %}
-    {{table | safe}}
+    {{artworkplacecreatedtable | safe}}
     {% endblock %}
   </div>
 
   <form method="POST" action="/recommendartworkbytitle">
     <p>Search by title<br>
-    <select name="get_artwork_title">
+    <select name="get_title">
     <option value="all" selected>Any</option>
     <option value="The Starry Night">The Starry Night</option>
     <option value="The Persistence of Memory">The Persistence of Memory</option>
@@ -107,14 +107,14 @@
     <option value="Early Sunday Morning">Early Sunday Morning</option>
     <option value="Mountains at Saint-Rémy">Mountains at Saint-Rémy</option>
     <option value="The Palazzo Ducale, Seen from San Giorgio Maggiore">The Palazzo Ducale, Seen from San Giorgio Maggiore</option>
-    <option value="Mademoiselle Bécat at the Café des Ambassadeurs">Mademoiselle Bécat at the Café des Ambassadeurs</option>
+    <option value="Mademoiselle Becat at the Cafe des Ambassadeurs">Mademoiselle Becat at the Cafe des Ambassadeurs</option>
     <option value="Officer and Laughing Girl">Officer and Laughing Girl</option>
     <option value="42nd Street New York Public Library">42nd Street New York Public Library</option>
     <option value="Houses of Parliament, Sunlight Effect">Houses of Parliament, Sunlight Effect</option>
     <option value="The Village of Gardanne">The Village of Gardanne</option>
     <option value="Two Houses in Barranquilla, Colombia">Two Houses in Barranquilla, Colombia</option>
     <option value="Lucy Hessel Reading">Lucy Hessel Reading</option>
-    <option value="Les Demoiselles d'Avignon">Les Demoiselles d'Avignon</option>
+    <option value="Les Demoiselles dAvignon">Les Demoiselles dAvignon</option>
     <option value="Alchemy">Alchemy</option>
     <option value="Study for “Portrait of Chess Players”">Study for “Portrait of Chess Players”</option>
     <br></select></p>
@@ -124,12 +124,12 @@
 
   <div>
     {% block artwork_title_content %}
-    {{table | safe}}
+    {{artworktitletable | safe}}
     {% endblock %}
   </div>
 
     <form method="POST" action="/recommendartworkbyyear">
-    <p>Search by title<br>
+    <p>Search by year<br>
     <select name="get_year">
     <option value="all" selected>Any</option>
     <option value=1660>1660</option>
@@ -153,7 +153,7 @@
 
   <div>
     {% block artwork_year_content %}
-    {{table | safe}}
+    {{artworkyeartable | safe}}
     {% endblock %}
   </div>
 
@@ -190,9 +190,9 @@
   </form>
 
   <div>
-    {% block content %}
-    {{table | safe}}
-    {% endblock content %}
+    {% block museumcontent %}
+    {{museumtable | safe}}
+    {% endblock museumcontent %}
   </div> 
 
 

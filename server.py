@@ -212,7 +212,7 @@ def recommendmuseum():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, table = df.to_html())
+	return render_template("index.html", rec = rec, museumtable = df.to_html())
 
 @app.route('/recommendartworkbyid',methods = ['POST'])
 def recommendartworkbyid():
@@ -261,7 +261,203 @@ def recommendartworkbyid():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, artworktable = df.to_html())
+	return render_template("index.html", rec = rec, artworkidtable = df.to_html())
+
+@app.route('/recommendartworkbytitle',methods = ['POST'])
+def recommendartworkbytitle():
+	#artwork_id = request.form.get('get_artwork_id')
+	title = request.form.get('get_title')
+	#place_creatd = request.form.get('place_creatd')
+	#medium = request.form.get('get_medium')
+	#year = request.form.get('year')
+
+	if title != "all":
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(title))
+	else:
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+
+	artwork_id_list = []
+	title_list = []
+	place_created_list = []
+	medium_list = []
+	year_list = []
+	artist_name_list = []
+	museum_name_list = []
+
+	for q in artworkquery:
+		artwork_id_list.append(q['artwork_id'])
+		title_list.append(q['title'])
+		place_created_list.append(q['place_created'])
+		medium_list.append(q['medium'])
+		year_list.append(q['year'])
+		artist_name_list.append(q['artist_name'])
+		museum_name_list.append(q['museum_name'])
+
+	
+	artwork_id_array = np.asarray(artwork_id_list)
+	title_array = np.asarray(title_list)
+	place_created_array = np.asarray(place_created_list)
+	medium_array = np.asarray(medium_list)
+	year_array = np.asarray(year_list)
+	artist_name_array = np.asarray(artist_name_list)
+	museum_name_array = np.asarray(museum_name_list)
+
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df.index = np.arange(1, len(df) + 1) 
+	
+	if len(df)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, artworktitletable = df.to_html())
+
+@app.route('/recommendartworkbyplacecreated',methods = ['POST'])
+def recommendartworkbyplacecreated():
+	#artwork_id = request.form.get('get_artwork_id')
+	#title = request.form.get('title')
+	place_created = request.form.get('get_place_created')
+	#medium = request.form.get('get_medium')
+	#year = request.form.get('year')
+
+	if place_created != "all":
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.place_created = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(place_created))
+	else:
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+
+	artwork_id_list = []
+	title_list = []
+	place_created_list = []
+	medium_list = []
+	year_list = []
+	artist_name_list = []
+	museum_name_list = []
+
+	for q in artworkquery:
+		artwork_id_list.append(q['artwork_id'])
+		title_list.append(q['title'])
+		place_created_list.append(q['place_created'])
+		medium_list.append(q['medium'])
+		year_list.append(q['year'])
+		artist_name_list.append(q['artist_name'])
+		museum_name_list.append(q['museum_name'])
+
+	
+	artwork_id_array = np.asarray(artwork_id_list)
+	title_array = np.asarray(title_list)
+	place_created_array = np.asarray(place_created_list)
+	medium_array = np.asarray(medium_list)
+	year_array = np.asarray(year_list)
+	artist_name_array = np.asarray(artist_name_list)
+	museum_name_array = np.asarray(museum_name_list)
+
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df.index = np.arange(1, len(df) + 1) 
+	
+	if len(df)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, artworkplacecreatedtable = df.to_html())
+
+@app.route('/recommendartworkbymedium',methods = ['POST'])
+def recommendartworkbymedium():
+	#artwork_id = request.form.get('get_artwork_id')
+	#title = request.form.get('title')
+	#place_creatd = request.form.get('place_creatd')
+	medium = request.form.get('get_medium')
+	#year = request.form.get('year')
+
+	if medium != "all":
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.medium = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(medium))
+	else:
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+
+	artwork_id_list = []
+	title_list = []
+	place_created_list = []
+	medium_list = []
+	year_list = []
+	artist_name_list = []
+	museum_name_list = []
+
+	for q in artworkquery:
+		artwork_id_list.append(q['artwork_id'])
+		title_list.append(q['title'])
+		place_created_list.append(q['place_created'])
+		medium_list.append(q['medium'])
+		year_list.append(q['year'])
+		artist_name_list.append(q['artist_name'])
+		museum_name_list.append(q['museum_name'])
+
+	
+	artwork_id_array = np.asarray(artwork_id_list)
+	title_array = np.asarray(title_list)
+	place_created_array = np.asarray(place_created_list)
+	medium_array = np.asarray(medium_list)
+	year_array = np.asarray(year_list)
+	artist_name_array = np.asarray(artist_name_list)
+	museum_name_array = np.asarray(museum_name_list)
+
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df.index = np.arange(1, len(df) + 1) 
+	
+	if len(df)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, artworkmediumtable = df.to_html())
+
+@app.route('/recommendartworkbyyear',methods = ['POST'])
+def recommendartworkbyyear():
+	#artwork_id = request.form.get('get_artwork_id')
+	#title = request.form.get('title')
+	#place_creatd = request.form.get('place_creatd')
+	#medium = request.form.get('get_medium')
+	year = request.form.get('get_year')
+
+	if year != "all":
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.year = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(year))
+	else:
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+
+	artwork_id_list = []
+	title_list = []
+	place_created_list = []
+	medium_list = []
+	year_list = []
+	artist_name_list = []
+	museum_name_list = []
+
+	for q in artworkquery:
+		artwork_id_list.append(q['artwork_id'])
+		title_list.append(q['title'])
+		place_created_list.append(q['place_created'])
+		medium_list.append(q['medium'])
+		year_list.append(q['year'])
+		artist_name_list.append(q['artist_name'])
+		museum_name_list.append(q['museum_name'])
+
+	
+	artwork_id_array = np.asarray(artwork_id_list)
+	title_array = np.asarray(title_list)
+	place_created_array = np.asarray(place_created_list)
+	medium_array = np.asarray(medium_list)
+	year_array = np.asarray(year_list)
+	artist_name_array = np.asarray(artist_name_list)
+	museum_name_array = np.asarray(museum_name_list)
+
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df.index = np.arange(1, len(df) + 1) 
+	
+	if len(df)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
