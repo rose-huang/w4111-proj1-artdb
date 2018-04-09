@@ -272,7 +272,7 @@ def recommendartworkbytitle():
 	#year = request.form.get('year')
 
 	if title != "all":
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = u'{0}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(title))
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(title))
 	else:
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
 
