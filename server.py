@@ -117,11 +117,15 @@ def index():
 	#
 	# example of a database query
 	#
-	cursor = g.conn.execute("SELECT artwork_id FROM artworks_is_at")
+	user_names = g.conn.execute("SELECT name FROM users")
 	names = []
-	for result in cursor:
-		names.append(result['artwork_id'])  # can also be accessed using result[0]
-	cursor.close()
+	for result in user_names:
+		names.append(result['name'])  # can also be accessed using result[0]
+	#user_names.close()
+
+
+
+
 
 	#
 	# Flask uses Jinja templates, which is an extension to HTML where you can
@@ -149,7 +153,7 @@ def index():
 	#     <div>{{n}}</div>
 	#     {% endfor %}
 	#
-	context = dict(data = names)
+	context = dict(user_names = names)
 
 
 	#

@@ -18,7 +18,7 @@
   </div>-->
   <!-- USER RECS -->
  <h2>Get user info and recommendations</h2>
- <form method="POST" action="/getuserinfo">
+ <!--<form method="POST" action="/getuserinfo">
     <p>Select user<br>
     <select name="get_user">
     <option value="Frank">Frank</option>
@@ -34,7 +34,15 @@
 
     <br></select></p>
     <input type="submit" value="Get user information">
-  </form>
+  </form>-->
+
+  <form method="POST" action="/getuserinfo">
+    <p>Select user<br>
+      <select name="get_user">
+      {% for un in user_names %}
+      <option value = "{{ un }}">{{ un }}</option>
+      {% endfor %}<br>
+    </select></p>
 
   <div>
     {% block userartwork_content %}
