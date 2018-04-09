@@ -16,6 +16,7 @@
     <div>{{n}}</div>
     {% endfor %}
   </div>-->
+  <!-- USER RECS -->
  <h2>Get user info and recommendations</h2>
  <form method="POST" action="/getuserinfo">
     <p>Select user<br>
@@ -52,6 +53,14 @@
     {{usermovementtable | safe}}
     {% endblock usermovement_content %}
   </div>
+<br>
+  <h3> user recommendations </h3>
+  <div>
+    {% block userrec_content %}
+    {{userrectable | safe}}
+    {% endblock userrec_content %}
+  </div>
+
 
 <!-- SEARCH FOR ARTWORKS -->
   <h2>Search for artworks</h2>

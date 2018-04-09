@@ -519,11 +519,32 @@ def getuserinfo():
 
 
 	#the actual recommendations
-	usermovementquery = conn.execute("SELECT Art.title, Artist.name, M.name, Mus.name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name") 
+	userrecquery = conn.execute("SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name") 
+
+	userrec_art_title_list = []
+	userrec_artist_name_list = []
+	userrec_move_name_list = []
+	userrec_mus_name_list = []
+
+	for q in userrecquery:
+		userrec_art_title_list.append(q['art_title'])
+		userrec_artist_name_list.append(q['artist_name'])
+		userrec_move_name_list.append(q['mov_name'])
+		userrec_mus_name_list.append(q['mus_name'])
+
+	userrec_art_title_array = np.asarray(userrec_art_title_list)
+	userrec_artist_name_array = np.asarray(userrec_artist_name_list)
+	userrec_move_name_array = np.asarray(userrec_move_name_list)
+	userrec_mus_name_array = np.asarray(userrec_mus_name_list)
+
+
+	df_userrec = pd.DataFrame(list(zip(userrec_art_title_array, userrec_artist_name_array, userrec_move_name_array, userrec_mus_name_array)),columns=['Artwork Title', 'Artist Name', 'Movement Name', 'Museum Name'])
+	df_userrec.index = np.arange(1, len(df_movement) + 1) 
+
 
 		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html())
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html())
 
 
 
