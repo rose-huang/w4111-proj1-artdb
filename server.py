@@ -466,6 +466,16 @@ def recommendartworkbyyear():
 @app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
 
+###
+	user_names = g.conn.execute("SELECT name FROM users")
+	names = []
+	for result in user_names:
+		names.append(result['name'])
+
+	context = dict(user_names = names)
+
+###
+
 	user = request.form.get('get_user')
 
 	userartworkquery = conn.execute("SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = '{}' and U.user_id = L.user_id and L.artwork_id = A.artwork_id".format(user))
@@ -548,7 +558,7 @@ def getuserinfo():
 
 		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html())
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
 
 
 
