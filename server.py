@@ -459,6 +459,30 @@ def recommendartworkbyyear():
 
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
+@app.route('/getuserinfo',methods = ['POST'])
+def getuserinfo():
+
+	user = request.form.get('get_user')
+
+	userartworkquery = conn.execute("SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = '{}' and U.user_id = L.user_id and L.artwork_id = A.artwork_id".format(user))
+
+	title_list = []
+
+	for q in userartworkquery:
+		title_list.append(q['title'])
+
+	title_array = np.asarray(title_list)
+
+	df_artwork = pd.DataFrame(list(zip(title_array)),columns=['Title'])
+	df_artwork.index = np.arange(1, len(df_artwork) + 1) 
+	
+	if len(df_artwork)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html())
+
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
 def add():
