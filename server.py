@@ -473,7 +473,7 @@ def getuserinfo():
 
 	title_array = np.asarray(title_list)
 
-	df_artwork = pd.DataFrame(list(zip(title_array)),columns=['Title'])
+	df_artwork = pd.DataFrame(list(zip(title_array)),columns=['Artwork Title'])
 	df_artwork.index = np.arange(1, len(df_artwork) + 1) 
 	
 	if len(df_artwork)!=0:
@@ -491,7 +491,7 @@ def getuserinfo():
 
 	artistname_array = np.asarray(artistname_list)
 
-	df_artist = pd.DataFrame(list(zip(artistname_array)),columns=['Name'])
+	df_artist = pd.DataFrame(list(zip(artistname_array)),columns=['Artist Name'])
 	df_artist.index = np.arange(1, len(df_artist) + 1) 
 	
 	if len(df_artist)!=0:
@@ -499,7 +499,25 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html())
+
+	usermovementquery = conn.execute("SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
+
+	movement_list = []
+
+	for q in usermovementquery:
+		movement_list.append(q['name'])
+
+	movement_array = np.asarray(movement_list)
+
+	df_movement = pd.DataFrame(list(zip(movement_array)),columns=['Movement Name'])
+	df_movement.index = np.arange(1, len(df_movement) + 1) 
+	
+	if len(df_movement)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html())
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
