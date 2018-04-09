@@ -481,7 +481,25 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html())
+
+	userartistquery = conn.execute("SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = '{}' and U.user_id = L.user_id and L.artist_id = A.artist_id".format(user))
+
+	artistname_list = []
+
+	for q in userartistquery:
+		artistname_list.append(q['name'])
+
+	artistname_array = np.asarray(artistname_list)
+
+	df_artist = pd.DataFrame(list(zip(artistname_array)),columns=['Name'])
+	df_artist.index = np.arange(1, len(df_artist) + 1) 
+	
+	if len(df_artist)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html())
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
