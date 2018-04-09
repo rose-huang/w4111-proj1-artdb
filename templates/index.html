@@ -16,6 +16,36 @@
     <div>{{n}}</div>
     {% endfor %}
   </div>-->
+ <h2>Get user info and recommendations</h2>
+ <form method="POST" action="/getuserinfo">
+    <p>Select user<br>
+    <select name="get_user">
+    <option value="Frank">Frank</option>
+    <option value="Rose">Rose</option>
+    <option value="Luis">Luis</option>
+    <option value="Christophe">Christophe</option>
+    <option value="Jerome">Jerome</option>
+    <option value="Chang">Chang</option>
+    <option value="Angel">Angel</option>
+    <option value="Joseph">Joseph</option>
+    <option value="Kimberly">Kimberly</option>
+    <option value="Felipe">Felipe</option>
+
+    <br></select></p>
+    <input type="submit" value="Get user information">
+  </form>
+
+  <div>
+    {% block userartwork_content %}
+    {{userartworktable | safe}}
+    {% endblock %}
+  </div>
+<br><br>
+  <div>
+    {% block userartist_content %}
+    {{userartisttable | safe}}
+    {% endblock userartist_content %}
+  </div>
 
 <!-- SEARCH FOR ARTWORKS -->
   <h2>Search for artworks</h2>
@@ -196,31 +226,7 @@
   </div> 
 
 
-  <form method="POST" action="/getuserinfo">
-    <p>Get User Info<br>
-    <select name="get_user">
-    <option value="Frank">Frank</option>
-    <option value="Rose">Rose</option>
-    <option value="Luis">Luis</option>
-    <option value="Christophe">Christophe</option>
-    <option value="Jerome">Jerome</option>
-    <option value="Chang">Chang</option>
-    <option value="Angel">Angel</option>
-    <option value="Joseph">Joseph</option>
-    <option value="Kimberly">Kimberly</option>
-    <option value="Felipe">Felipe</option>
-
-    <br></select></p>
-    <input type="submit" value="Get user information">
-  </form>
-
-  <div>
-    {% block userartwork_content %}
-    {{userartworktable | safe}}
-    {% endblock %}
-  </div>
-
-
+ 
 
 <!--<p><a href="another">Go to the other page</a></p>-->
 
