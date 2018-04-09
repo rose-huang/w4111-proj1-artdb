@@ -517,7 +517,16 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+
+	#the actual recommendations
+	usermovementquery = conn.execute("SELECT Art.title, Artist.name, M.name, Mus.name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name") 
+
+		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
+
 	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html())
+
+
+
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
