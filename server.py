@@ -53,7 +53,17 @@ names = []
 for result in user_names:
 	names.append(result['name'])
 
-context = dict(user_names = names)
+art_id = conn.execute("SELECT artwork_id FROM artworks_is_at")
+art_ids = []
+for result in art_id:
+	art_ids.append(result['artwork_id'])
+
+art_medium = conn.execute("SELECT medium FROM artworks_is_at")
+art_mediums = []
+for result in art_medium:
+	art_mediums.append(result['medium'])
+
+context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums)
 
 #engine.execute("""CREATE TABLE IF NOT EXISTS test (
 #  id serial,
