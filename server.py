@@ -48,17 +48,17 @@ conn = engine.connect();
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-user_names = conn.execute("SELECT name FROM users")
+user_names = conn.execute("SELECT name FROM users ORDER BY name")
 names = []
 for result in user_names:
 	names.append(result['name'])
 
-art_id = conn.execute("SELECT artwork_id FROM artworks_is_at")
+art_id = conn.execute("SELECT artwork_id FROM artworks_is_at ORDER BY artwork_id")
 art_ids = []
 for result in art_id:
 	art_ids.append(result['artwork_id'])
 
-art_medium = conn.execute("SELECT medium FROM artworks_is_at")
+art_medium = conn.execute("SELECT medium FROM artworks_is_at ORDER BY medium")
 art_mediums = []
 for result in art_medium:
 	art_mediums.append(result['medium'])

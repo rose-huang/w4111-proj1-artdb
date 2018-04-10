@@ -64,25 +64,6 @@
       <option value = "{{ aid }}">{{ aid }}</option>
       {% endfor %}<br>
     </select></p>
-    <!--
-    <option value="all" selected>Any</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="8">8</option>
-    <option value="9">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
-    <option value="13">13</option>
-    <option value="14">14</option>
-    <option value="15">15</option>
-    <option value="16">16</option>
-    <br></select></p>-->
 
   <input type="submit" value="Search for artwork by artwork id">
 </form>
@@ -98,21 +79,11 @@
     <p>Search by medium of artwork<br>
     <select name="get_medium">
     <option value="all" selected>Any</option>
-    {% for aid in artwork_ids %}
-      <option value = "{{ aid }}">{{ aid }}</option>
+    {% for m in artwork_mediums %}
+      <option value = "{{ m }}">{{ m }}</option>
       {% endfor %}<br>
     </select></p>
 
-
-    <!--<option value="Oil on canvas">Oil on canvas</option>
-    <option value="Felt-tip pen and crayon on paper">Felt-tip pen and crayon on paper</option>
-    <option value="Pastel over lithograph">Pastel over lithograph</option>
-    <option value="Brush and oil paint, graphite on paperboard">Brush and oil paint, graphite on paperboard</option>
-    <option value="Oil and conte crayon on canvas">Oil and conte crayon on canvas</option>
-    <option value="Oil, aluminum, paint and wood on fabric">Oil, aluminum, paint and wood on fabric</option>
-    <option value="Ink and watercolor on paper">Ink and watercolor on paper</option>
-
-    <br></select></p>-->
     <input type="submit" value="Search for artwork by medium">
   </form>
 
