@@ -18,29 +18,9 @@
   </div>-->
   <!-- USER RECS -->
  <h2>Get user info and recommendations</h2>
- <!--<form method="POST" action="/getuserinfo">
-    <p>Select user<br>
-    <select name="get_user">
-    <option value="Frank">Frank</option>
-    <option value="Rose">Rose</option>
-    <option value="Luis">Luis</option>
-    <option value="Christophe">Christophe</option>
-    <option value="Jerome">Jerome</option>
-    <option value="Chang">Chang</option>
-    <option value="Angel">Angel</option>
-    <option value="Joseph">Joseph</option>
-    <option value="Kimberly">Kimberly</option>
-    <option value="Felipe">Felipe</option>
-
-    <br></select></p>
-    <input type="submit" value="Get user information">
-  </form>
-
-  <form method="POST" action="/getuserinfo">-->
   <form method="POST" action="/getuserinfo">
     <p>Select user<br>
       <select name="get_user">
-      <option value = "None">None</option>
       {% for un in user_names %}
       <option value = "{{ un }}">{{ un }}</option>
       {% endfor %}<br>
@@ -53,13 +33,13 @@
     {{userartworktable | safe}}
     {% endblock %}
   </div>
-<br><br>
+<br>
   <div>
     {% block userartist_content %}
     {{userartisttable | safe}}
     {% endblock userartist_content %}
   </div>
-<br><br>
+<br>
   <div>
     {% block usermovement_content %}
     {{usermovementtable | safe}}
@@ -79,6 +59,12 @@
   <form method="POST" action="/recommendartworkbyid">
     <p>Search by artwork id<br>
     <select name="get_artwork_id">
+      <option value="all" selected>Any</option>
+      {% for aid in artwork_ids %}
+      <option value = "{{ aid }}">{{ aid }}</option>
+      {% endfor %}<br>
+    </select></p>
+    <!--
     <option value="all" selected>Any</option>
     <option value="1">1</option>
     <option value="2">2</option>
@@ -96,7 +82,7 @@
     <option value="14">14</option>
     <option value="15">15</option>
     <option value="16">16</option>
-    <br></select></p>
+    <br></select></p>-->
 
   <input type="submit" value="Search for artwork by artwork id">
 </form>
@@ -112,7 +98,13 @@
     <p>Search by medium of artwork<br>
     <select name="get_medium">
     <option value="all" selected>Any</option>
-    <option value="Oil on canvas">Oil on canvas</option>
+    {% for aid in artwork_ids %}
+      <option value = "{{ aid }}">{{ aid }}</option>
+      {% endfor %}<br>
+    </select></p>
+
+
+    <!--<option value="Oil on canvas">Oil on canvas</option>
     <option value="Felt-tip pen and crayon on paper">Felt-tip pen and crayon on paper</option>
     <option value="Pastel over lithograph">Pastel over lithograph</option>
     <option value="Brush and oil paint, graphite on paperboard">Brush and oil paint, graphite on paperboard</option>
@@ -120,7 +112,7 @@
     <option value="Oil, aluminum, paint and wood on fabric">Oil, aluminum, paint and wood on fabric</option>
     <option value="Ink and watercolor on paper">Ink and watercolor on paper</option>
 
-    <br></select></p>
+    <br></select></p>-->
     <input type="submit" value="Search for artwork by medium">
   </form>
 
