@@ -308,7 +308,7 @@ def recommendartworkbytitle():
 	if title != "all":
 		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(title)
 		artworkquery = conn.execute(q, (title))
-		#conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(title))
+
 	else:
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
 
@@ -350,14 +350,12 @@ def recommendartworkbytitle():
 
 @app.route('/recommendartworkbyplacecreated',methods = ['POST'])
 def recommendartworkbyplacecreated():
-	#artwork_id = request.form.get('get_artwork_id')
-	#title = request.form.get('title')
+
 	place_created = request.form.get('get_place_created')
-	#medium = request.form.get('get_medium')
-	#year = request.form.get('year')
 
 	if place_created != "all":
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.place_created = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(place_created))
+		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.place_created = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(place_created)
+		artworkquery = conn.execute(q, (place_created))
 	else:
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
 
@@ -402,7 +400,9 @@ def recommendartworkbymedium():
 	medium = request.form.get('get_medium')
 
 	if medium != "all":
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.medium = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(medium))
+		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.medium = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(medium)
+		artworkquery = conn.execute(q, (medium))
+
 	else:
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
 
@@ -492,7 +492,8 @@ def getuserinfo():
 
 	user = request.form.get('get_user')
 
-	userartworkquery = conn.execute("SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = '{}' and U.user_id = L.user_id and L.artwork_id = A.artwork_id".format(user))
+	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(user)
+	userartworkquery = conn.execute(qlikes1, (user))
 
 	title_list = []
 
@@ -509,8 +510,8 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-
-	userartistquery = conn.execute("SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = '{}' and U.user_id = L.user_id and L.artist_id = A.artist_id".format(user))
+	qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(user)
+	userartistquery = conn.execute(qlikes2, (user))
 
 	artistname_list = []
 
@@ -527,8 +528,8 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-
-	usermovementquery = conn.execute("SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
+	qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = %s and U.user_id = L.user_id and L.name = M.name;".format(user)
+	usermovementquery = conn.execute(qlikes3, (user))
 
 	movement_list = []
 
@@ -547,7 +548,8 @@ def getuserinfo():
 
 
 	#the actual recommendations
-	userrecquery = conn.execute("(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = '{}' and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = '{}' and U.user_id = L.user_id and L.name = M.name))".format(user, user)) 
+	userrecquery = conn.execute("(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (qlikes2) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (qlikes2))",(user), (user)) 
+	#userrecquery = conn.execute("(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = '{}' and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = '{}' and U.user_id = L.user_id and L.name = M.name))".format(user, user)) 
 
 	userrec_art_title_list = []
 	userrec_artist_name_list = []
@@ -569,8 +571,6 @@ def getuserinfo():
 	df_userrec = pd.DataFrame(list(zip(userrec_art_title_array, userrec_artist_name_array, userrec_move_name_array, userrec_mus_name_array)),columns=['Artwork Title', 'Artist Name', 'Movement Name', 'Museum Name'])
 	df_userrec.index = np.arange(1, len(df_userrec) + 1) 
 
-
-		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
 
 	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
 
