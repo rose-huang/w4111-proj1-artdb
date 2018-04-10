@@ -48,10 +48,10 @@ conn = engine.connect();
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-user_names = g.conn.execute("SELECT name FROM users")
-	names = []
-	for result in user_names:
-		names.append(result['name'])
+user_names = conn.execute("SELECT name FROM users")
+names = []
+for result in user_names:
+	names.append(result['name'])
 
 context = dict(user_names = names)
 
