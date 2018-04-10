@@ -98,7 +98,14 @@
     <p>Search by place created for artwork<br>
     <select name="get_place_created">
     <option value="all" selected>Any</option>
-    <!--<option value="NULL">Unknown</option>-->
+    {% for p in artwork_place_created %}
+      <option value = "{{ p }}">{{ p }}</option>
+      {% endfor %}<br>
+    </select></p>
+
+
+
+    <!--<option value="NULL">Unknown</option>
     <option value="San Giorgio Maggiore">San Giorgio Maggiore</option>
     <option value="Paris">Paris</option>
     <option value="London">London</option>
@@ -107,7 +114,7 @@
     <option value="New York">New York</option>
     <option value="Barranquilla">Barranquilla</option>
 
-    <br></select></p>
+    <br></select></p>-->
     <input type="submit" value="Search for artwork by place created">
   </form>
 
@@ -119,9 +126,15 @@
 
   <form method="POST" action="/recommendartworkbytitle">
     <p>Search by title<br>
-    <select name="get_title">
+    <select name="get_title">  
     <option value="all" selected>Any</option>
-    <option value="The Starry Night">The Starry Night</option>
+    {% for t in artwork_titles %}
+      <option value = "{{ t }}">{{ t }}</option>
+      {% endfor %}<br>
+    </select></p>
+
+
+    <!--<option value="The Starry Night">The Starry Night</option>
     <option value="The Persistence of Memory">The Persistence of Memory</option>
     <option value="Self-Portrait">Self-Portrait</option>
     <option value="Early Sunday Morning">Early Sunday Morning</option>
@@ -137,7 +150,7 @@
     <option value="Les Demoiselles d'Avignon">Les Demoiselles d'Avignon</option>
     <option value="Alchemy">Alchemy</option>
     <option value='Study for “Portrait of Chess Players”'>Study for “Portrait of Chess Players”</option>
-    <br></select></p>
+    <br></select></p>-->
 
     <input type="submit" value="Search for artwork by title">
   </form>
@@ -152,7 +165,12 @@
     <p>Search by year<br>
     <select name="get_year">
     <option value="all" selected>Any</option>
-    <option value=1660>1660</option>
+    {% for y in artwork_years %}
+      <option value = "{{ y }}">{{ y }}</option>
+      {% endfor %}<br>
+    </select></p>
+
+    <!--<option value=1660>1660</option>
     <option value=1885>1885</option>
     <option value=1886>1886</option>
     <option value=1889>1889</option>
@@ -166,7 +184,7 @@
     <option value=1931>1931</option>
     <option value=1947>1947</option>
     <option value=1972>1972</option>
-    <br></select></p>
+    <br></select></p>-->
 
     <input type="submit" value="Search for artwork by year">
   </form>
@@ -176,8 +194,6 @@
     {{artworkyeartable | safe}}
     {% endblock %}
   </div>
-
-
 
 
 

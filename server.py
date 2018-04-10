@@ -48,7 +48,7 @@ conn = engine.connect();
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-user_names = conn.execute("SELECT name FROM users ORDER BY name")
+user_names = conn.execute("SELECT name FROM users")
 names = []
 for result in user_names:
 	names.append(result['name'])
@@ -63,7 +63,24 @@ art_mediums = []
 for result in art_medium:
 	art_mediums.append(result['medium'])
 
-context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums)
+art_place = conn.execute("SELECT DISTINCT place_created FROM artworks_is_at ORDER BY placed_created")
+art_places = []
+for result in art_place:
+	art_places.append(result['place_created'])
+
+art_title = conn.execute("SELECT DISTINCT title FROM artworks_is_at ORDER BY title")
+art_titles = []
+for result in art_title:
+	art_titles.append(result['title'])
+
+art_year = conn.execute("SELECT DISTINCT year FROM artworks_is_at ORDER BY year")
+art_years = []
+for result in art_year:
+	art_years.append(result['year'])
+
+
+
+context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years)
 
 #engine.execute("""CREATE TABLE IF NOT EXISTS test (
 #  id serial,
