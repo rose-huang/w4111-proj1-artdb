@@ -303,14 +303,12 @@ def recommendartworkbyid():
 
 @app.route('/recommendartworkbytitle',methods = ['POST'])
 def recommendartworkbytitle():
-	#artwork_id = request.form.get('get_artwork_id')
 	title = request.form.get('get_title')
-	#place_creatd = request.form.get('place_creatd')
-	#medium = request.form.get('get_medium')
-	#year = request.form.get('year')
 
 	if title != "all":
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(title))
+		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(title)
+		artworkquery = conn.execute(q, (title))
+		#conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(title))
 	else:
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
 
@@ -491,8 +489,6 @@ def recommendartworkbyyear():
 
 @app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
-
-	index()
 
 	user = request.form.get('get_user')
 
