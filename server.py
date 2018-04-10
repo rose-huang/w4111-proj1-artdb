@@ -123,10 +123,6 @@ def index():
 		names.append(result['name'])  # can also be accessed using result[0]
 	#user_names.close()
 
-
-
-
-
 	#
 	# Flask uses Jinja templates, which is an extension to HTML where you can
 	# pass data to a template and dynamically generate HTML based on the data
@@ -463,17 +459,8 @@ def recommendartworkbyyear():
 
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
-@app.route('/getuserinfo',methods = ['GET','POST'])
+@app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
-
-###
-	user_names = g.conn.execute("SELECT name FROM users")
-	names = []
-	for result in user_names:
-		names.append(result['name'])
-	context = dict(user_names = names)
-
-###
 
 	user = request.form.get('get_user')
 
@@ -557,7 +544,7 @@ def getuserinfo():
 
 		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
 
-	return render_template("getuserinfo.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html())
 
 
 
