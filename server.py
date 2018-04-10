@@ -48,7 +48,12 @@ conn = engine.connect();
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
+user_names = g.conn.execute("SELECT name FROM users")
+	names = []
+	for result in user_names:
+		names.append(result['name'])
 
+context = dict(user_names = names)
 
 #engine.execute("""CREATE TABLE IF NOT EXISTS test (
 #  id serial,
@@ -117,10 +122,10 @@ def index():
 	#
 	# example of a database query
 	#
-	user_names = g.conn.execute("SELECT name FROM users")
-	names = []
-	for result in user_names:
-		names.append(result['name'])  # can also be accessed using result[0]
+#	user_names = g.conn.execute("SELECT name FROM users")
+#	names = []
+#	for result in user_names:
+#		names.append(result['name'])  # can also be accessed using result[0]
 	#user_names.close()
 
 	#
@@ -149,7 +154,7 @@ def index():
 	#     <div>{{n}}</div>
 	#     {% endfor %}
 	#
-	context = dict(user_names = names)
+	#context = dict(user_names = names)
 
 
 	#
@@ -213,7 +218,7 @@ def recommendmuseum():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, museumtable = df.to_html())
+	return render_template("index.html", rec = rec, museumtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyid',methods = ['POST'])
 def recommendartworkbyid():
@@ -262,7 +267,7 @@ def recommendartworkbyid():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, artworkidtable = df.to_html())
+	return render_template("index.html", rec = rec, artworkidtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbytitle',methods = ['POST'])
 def recommendartworkbytitle():
@@ -311,7 +316,7 @@ def recommendartworkbytitle():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, artworktitletable = df.to_html())
+	return render_template("index.html", rec = rec, artworktitletable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyplacecreated',methods = ['POST'])
 def recommendartworkbyplacecreated():
@@ -360,7 +365,7 @@ def recommendartworkbyplacecreated():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, artworkplacecreatedtable = df.to_html())
+	return render_template("index.html", rec = rec, artworkplacecreatedtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbymedium',methods = ['POST'])
 def recommendartworkbymedium():
@@ -409,7 +414,7 @@ def recommendartworkbymedium():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, artworkmediumtable = df.to_html())
+	return render_template("index.html", rec = rec, artworkmediumtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyyear',methods = ['POST'])
 def recommendartworkbyyear():
@@ -458,7 +463,7 @@ def recommendartworkbyyear():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
-	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
+	return render_template("index.html", rec = rec, artworkyeartable = df.to_html(), **context)
 
 @app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
@@ -547,7 +552,7 @@ def getuserinfo():
 
 		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html())
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
 
 
 
