@@ -462,6 +462,8 @@ def recommendartworkbyyear():
 @app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
 
+	index()
+
 	user = request.form.get('get_user')
 
 	userartworkquery = conn.execute("SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = '{}' and U.user_id = L.user_id and L.artwork_id = A.artwork_id".format(user))
