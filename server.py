@@ -463,7 +463,8 @@ def recommendartworkbyyear():
 
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
-@app.route('/getuserinfo',methods = ['POST'])
+#@app.route('/getuserinfo',methods = ['POST'])
+@app.route('/',methods = ['POST'])
 def getuserinfo():
 
 ###

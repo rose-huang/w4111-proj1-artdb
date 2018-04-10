@@ -34,11 +34,13 @@
 
     <br></select></p>
     <input type="submit" value="Get user information">
-  </form>-->
+  </form>
 
-  <form method="POST" action="/getuserinfo">
+  <form method="POST" action="/getuserinfo">-->
+  <form method="POST" action="/">
     <p>Select user<br>
       <select name="get_user">
+      <option value = "None">None</option>
       {% for un in user_names %}
       <option value = "{{ un }}">{{ un }}</option>
       {% endfor %}<br>
