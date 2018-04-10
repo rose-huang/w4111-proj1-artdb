@@ -104,16 +104,6 @@
     </select></p>
 
 
-
-    <!--<option value="NULL">Unknown</option>
-    <option value="San Giorgio Maggiore">San Giorgio Maggiore</option>
-    <option value="Paris">Paris</option>
-    <option value="London">London</option>
-    <option value="Saint Remy">Saint Remy</option>
-    <option value="Gardanne">Gardanne</option>
-    <option value="New York">New York</option>
-    <option value="Barranquilla">Barranquilla</option>
-
     <br></select></p>-->
     <input type="submit" value="Search for artwork by place created">
   </form>
@@ -133,25 +123,6 @@
       {% endfor %}<br>
     </select></p>
 
-
-    <!--<option value="The Starry Night">The Starry Night</option>
-    <option value="The Persistence of Memory">The Persistence of Memory</option>
-    <option value="Self-Portrait">Self-Portrait</option>
-    <option value="Early Sunday Morning">Early Sunday Morning</option>
-    <option value="Mountains at Saint-Remy">Mountains at Saint-Remy</option>
-    <option value="The Palazzo Ducale, Seen from San Giorgio Maggiore">The Palazzo Ducale, Seen from San Giorgio Maggiore</option>
-    <option value="Mademoiselle Becat at the Cafe des Ambassadeurs">Mademoiselle Becat at the Cafe des Ambassadeurs</option>
-    <option value="Officer and Laughing Girl">Officer and Laughing Girl</option>
-    <option value="42nd Street New York Public Library">42nd Street New York Public Library</option>
-    <option value="Houses of Parliament, Sunlight Effect">Houses of Parliament, Sunlight Effect</option>
-    <option value="The Village of Gardanne">The Village of Gardanne</option>
-    <option value="Two Houses in Barranquilla, Colombia">Two Houses in Barranquilla, Colombia</option>
-    <option value="Lucy Hessel Reading">Lucy Hessel Reading</option>
-    <option value="Les Demoiselles d'Avignon">Les Demoiselles d'Avignon</option>
-    <option value="Alchemy">Alchemy</option>
-    <option value='Study for “Portrait of Chess Players”'>Study for “Portrait of Chess Players”</option>
-    <br></select></p>-->
-
     <input type="submit" value="Search for artwork by title">
   </form>
 
@@ -167,24 +138,9 @@
     <option value="all" selected>Any</option>
     {% for y in artwork_years %}
       <option value = "{{ y }}">{{ y }}</option>
-      {% endfor %}<br>
+    {% endfor %}<br>
     </select></p>
 
-    <!--<option value=1660>1660</option>
-    <option value=1885>1885</option>
-    <option value=1886>1886</option>
-    <option value=1889>1889</option>
-    <option value=1903>1903</option>
-    <option value=1907>1907</option>
-    <option value=1908>1908</option>
-    <option value=1911>1911</option>
-    <option value=1913>1913</option>
-    <option value=1917>1917</option>
-    <option value=1930>1930</option>
-    <option value=1931>1931</option>
-    <option value=1947>1947</option>
-    <option value=1972>1972</option>
-    <br></select></p>-->
 
     <input type="submit" value="Search for artwork by year">
   </form>
@@ -203,7 +159,12 @@
     <p>Select name of museum<br>
     <select name="get_museumname">
     <option value="all" selected>Any</option>
-    <option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
+    {% for y in artwork_years %}
+      <option value = "{{ y }}">{{ y }}</option>
+    {% endfor %}<br>
+    </select></p>
+
+    <!--<option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
     <option value="Museum of Modern Art">Museum of Modern Art</option>
     <option value="Whitney Museum of American Art">Whitney Museum of American Art</option>
     <option value="Solomon R. Guggenheim Museum">Solomon R. Guggenheim Museum</option>
@@ -213,7 +174,7 @@
     <option value="The Frick Collection">The Frick Collection</option>
     <option value="The Jewish Museum">The Jewish Museum</option>
     <option value="American Folk Art Museum">American Folk Art Museum</option>
-    <br></select></p>
+    <br></select></p>--> 
 
 
     <p>Select CU discount options<br>

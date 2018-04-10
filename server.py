@@ -78,9 +78,14 @@ art_years = []
 for result in art_year:
 	art_years.append(result['year'])
 
+muse_name = conn.execute("SELECT DISTINCT name FROM museums ORDER BY name")
+mus_names = []
+for result in mus_name:
+	mus_names.append(result['name'])
 
 
-context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years)
+
+context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names)
 
 #engine.execute("""CREATE TABLE IF NOT EXISTS test (
 #  id serial,
@@ -396,11 +401,7 @@ def recommendartworkbyplacecreated():
 
 @app.route('/recommendartworkbymedium',methods = ['POST'])
 def recommendartworkbymedium():
-	#artwork_id = request.form.get('get_artwork_id')
-	#title = request.form.get('title')
-	#place_creatd = request.form.get('place_creatd')
 	medium = request.form.get('get_medium')
-	#year = request.form.get('year')
 
 	if medium != "all":
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.medium = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(medium))
@@ -445,10 +446,6 @@ def recommendartworkbymedium():
 
 @app.route('/recommendartworkbyyear',methods = ['POST'])
 def recommendartworkbyyear():
-	#artwork_id = request.form.get('get_artwork_id')
-	#title = request.form.get('title')
-	#place_creatd = request.form.get('place_creatd')
-	#medium = request.form.get('get_medium')
 	year = request.form.get('get_year')
 
 	if year != "all":
