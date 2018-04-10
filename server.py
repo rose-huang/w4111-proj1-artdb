@@ -63,7 +63,7 @@ art_mediums = []
 for result in art_medium:
 	art_mediums.append(result['medium'])
 
-art_place = conn.execute("SELECT DISTINCT place_created FROM artworks_is_at WHERE place_created IS NOT NULL ORDER BY place_created")
+art_place = conn.execute("SELECT DISTINCT place_created FROM artworks_is_at  WHERE place_created != 'NULL' ORDER BY place_created")
 art_places = []
 for result in art_place:
 	art_places.append(result['place_created'])
