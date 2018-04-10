@@ -117,10 +117,10 @@ def index():
 	#
 	# example of a database query
 	#
-#	user_names = g.conn.execute("SELECT name FROM users")
-#	names = []
-#	for result in user_names:
-#		names.append(result['name'])  # can also be accessed using result[0]
+	user_names = g.conn.execute("SELECT name FROM users")
+	names = []
+	for result in user_names:
+		names.append(result['name'])  # can also be accessed using result[0]
 	#user_names.close()
 
 
@@ -153,7 +153,7 @@ def index():
 	#     <div>{{n}}</div>
 	#     {% endfor %}
 	#
-#	context = dict(user_names = names)
+	context = dict(user_names = names)
 
 
 	#
@@ -463,7 +463,7 @@ def recommendartworkbyyear():
 
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
-@app.route('/getuserinfo',methods = ['POST'])
+@app.route('/getuserinfo',methods = ['GET','POST'])
 def getuserinfo():
 
 ###
