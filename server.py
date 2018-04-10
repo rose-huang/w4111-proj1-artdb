@@ -158,6 +158,7 @@ def index():
 	#
 	return render_template("index.html", **context)
 
+
 #
 # This is an example of a different path.  You can see it at:
 # 
