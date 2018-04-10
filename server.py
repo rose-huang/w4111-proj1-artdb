@@ -98,7 +98,7 @@ def teardown_request(exception):
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-#@app.route('/')
+@app.route('/')
 def index():
 	"""
 	request is a special object that Flask provides to access web request information:
@@ -463,8 +463,7 @@ def recommendartworkbyyear():
 
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
-#@app.route('/getuserinfo',methods = ['POST'])
-@app.route('/',methods = ['GET','POST'])
+@app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
 
 ###
@@ -558,7 +557,7 @@ def getuserinfo():
 
 		#U.name = '{}' and U.user_id = L.user_id and L.name = M.name".format(user))
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
+	return render_template("getuserinfo.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
 
 
 
