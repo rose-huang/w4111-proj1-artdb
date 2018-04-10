@@ -78,7 +78,7 @@ art_years = []
 for result in art_year:
 	art_years.append(result['year'])
 
-muse_name = conn.execute("SELECT DISTINCT name FROM museums ORDER BY name")
+mus_name = conn.execute("SELECT DISTINCT name FROM museums ORDER BY name")
 mus_names = []
 for result in mus_name:
 	mus_names.append(result['name'])
