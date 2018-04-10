@@ -98,7 +98,7 @@ def teardown_request(exception):
 # see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
 # see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 #
-@app.route('/')
+#@app.route('/')
 def index():
 	"""
 	request is a special object that Flask provides to access web request information:
@@ -117,10 +117,10 @@ def index():
 	#
 	# example of a database query
 	#
-	user_names = g.conn.execute("SELECT name FROM users")
-	names = []
-	for result in user_names:
-		names.append(result['name'])  # can also be accessed using result[0]
+#	user_names = g.conn.execute("SELECT name FROM users")
+#	names = []
+#	for result in user_names:
+#		names.append(result['name'])  # can also be accessed using result[0]
 	#user_names.close()
 
 
@@ -153,7 +153,7 @@ def index():
 	#     <div>{{n}}</div>
 	#     {% endfor %}
 	#
-	context = dict(user_names = names)
+#	context = dict(user_names = names)
 
 
 	#
@@ -464,7 +464,7 @@ def recommendartworkbyyear():
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html())
 
 #@app.route('/getuserinfo',methods = ['POST'])
-@app.route('/',methods = ['POST'])
+@app.route('/',methods = ['GET','POST'])
 def getuserinfo():
 
 ###
@@ -472,7 +472,6 @@ def getuserinfo():
 	names = []
 	for result in user_names:
 		names.append(result['name'])
-
 	context = dict(user_names = names)
 
 ###
