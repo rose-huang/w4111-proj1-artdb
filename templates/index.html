@@ -103,8 +103,6 @@
       {% endfor %}<br>
     </select></p>
 
-
-    <br></select></p>-->
     <input type="submit" value="Search for artwork by place created">
   </form>
 
@@ -159,22 +157,10 @@
     <p>Select name of museum<br>
     <select name="get_museumname">
     <option value="all" selected>Any</option>
-    {% for y in artwork_years %}
-      <option value = "{{ y }}">{{ y }}</option>
+    {% for n in museum_names %}
+      <option value = "{{ n }}">{{ n }}</option>
     {% endfor %}<br>
     </select></p>
-
-    <!--<option value="The Metropolitan Museum of Art">The Metropolitan Museum of Art</option>
-    <option value="Museum of Modern Art">Museum of Modern Art</option>
-    <option value="Whitney Museum of American Art">Whitney Museum of American Art</option>
-    <option value="Solomon R. Guggenheim Museum">Solomon R. Guggenheim Museum</option>
-    <option value="The Morgan Library & Museum">The Morgan Library & Museum</option>
-    <option value="Brooklyn Museum">Brooklyn Museum</option>
-    <option value="Cooper Hewitt, Smithsonian Design Museum">Cooper Hewitt, Smithsonian Design Museum</option>
-    <option value="The Frick Collection">The Frick Collection</option>
-    <option value="The Jewish Museum">The Jewish Museum</option>
-    <option value="American Folk Art Museum">American Folk Art Museum</option>
-    <br></select></p>--> 
 
 
     <p>Select CU discount options<br>
