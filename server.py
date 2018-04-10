@@ -53,12 +53,12 @@ names = []
 for result in user_names:
 	names.append(result['name'])
 
-art_id = conn.execute("SELECT artwork_id FROM artworks_is_at ORDER BY artwork_id")
+art_id = conn.execute("SELECT artwork_id FROM artworks_is_at ORDER BY artwork_id::int")
 art_ids = []
 for result in art_id:
 	art_ids.append(result['artwork_id'])
 
-art_medium = conn.execute("SELECT medium FROM artworks_is_at ORDER BY medium")
+art_medium = conn.execute("SELECT DISTINCT medium FROM artworks_is_at ORDER BY medium")
 art_mediums = []
 for result in art_medium:
 	art_mediums.append(result['medium'])
