@@ -534,9 +534,13 @@ def recommendartworkbyyear():
 def getuserinfo():
 
 	user = request.form.get('get_user')
+	userinfo = user.split(" (user id = ")
+	user = userinfo[1]
+	user = user[:-1]
+	print(user)
 
 	# user's artworks
-	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(user)
+	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.user_id = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(user)
 	userartworkquery = conn.execute(qlikes1, (user))
 
 	title_list = []
@@ -555,7 +559,7 @@ def getuserinfo():
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
 	# user's artists
-	qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(user)
+	qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(user)
 	userartistquery = conn.execute(qlikes2, (user))
 
 	artistname_list = []
@@ -574,7 +578,7 @@ def getuserinfo():
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
 	# user's movement
-	qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = %s and U.user_id = L.user_id and L.name = M.name;".format(user)
+	qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name;".format(user)
 	usermovementquery = conn.execute(qlikes3, (user))
 
 	movement_list = []
@@ -593,7 +597,7 @@ def getuserinfo():
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
 	# user's visited museums
-	visited = "SELECT M.name FROM museums M, visited V, users U WHERE U.name = %s and U.user_id = V.user_id and M.museum_id = V.museum_id;".format(user)
+	visited = "SELECT M.name FROM museums M, visited V, users U WHERE U.user_id = %s and U.user_id = V.user_id and M.museum_id = V.museum_id;".format(user)
 	uservisitedquery = conn.execute(visited, (user))
 
 	visted_list = []
@@ -612,7 +616,7 @@ def getuserinfo():
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
 	#the actual recommendations
-	qrec = "(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = %s and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = %s and U.user_id = L.user_id and L.name = M.name))".format(user, user)
+	qrec = "(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name))".format(user, user)
 	userrecquery = conn.execute(qrec, (user), (user)) 
 	#userrecquery = conn.execute("(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = '{}' and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = '{}' and U.user_id = L.user_id and L.name = M.name))".format(user, user)) 
 
