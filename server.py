@@ -50,10 +50,12 @@ loggedinid = 0
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-def login(self, n):
+def userlogin(n):
+	global loggedinid
 	loggedinid = n
 
-def logout():
+def userlogout():
+	global loggedinid 
 	loggedinid = 0
 
 
@@ -546,9 +548,9 @@ def getuserinfo():
 	userinfo = user.split(" (user id = ")
 	user = userinfo[1]
 	user = user[:-1]
-	login(user)
+	userlogin(user)
 	print("user id from html is " + user)
-	print("logged in user is " + loggedinid)
+	print("logged in user is " + str(loggedinid))
 
 
 	# user's artworks
