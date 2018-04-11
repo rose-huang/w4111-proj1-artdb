@@ -252,6 +252,7 @@ def recommendmuseum():
 
 	return render_template("index.html", rec = rec, museumtable = df.to_html(), **context)
 
+# Recommend Artwork By Artwork ID
 @app.route('/recommendartworkbyid',methods = ['POST'])
 def recommendartworkbyid():
 	artwork_id = request.form.get('get_artwork_id')
@@ -261,9 +262,9 @@ def recommendartworkbyid():
 	#year = request.form.get('year')
 
 	if artwork_id != "all":
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.artwork_id = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(artwork_id))
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE A1.artwork_id = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id".format(artwork_id))
 	else:
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id")
 
 	artwork_id_list = []
 	title_list = []
@@ -272,6 +273,7 @@ def recommendartworkbyid():
 	year_list = []
 	artist_name_list = []
 	museum_name_list = []
+	exhibition_name_list = []
 
 	for q in artworkquery:
 		artwork_id_list.append(q['artwork_id'])
@@ -281,6 +283,7 @@ def recommendartworkbyid():
 		year_list.append(q['year'])
 		artist_name_list.append(q['artist_name'])
 		museum_name_list.append(q['museum_name'])
+		exhibition_name_list.append(q['exhibition_name'])
 
 	
 	artwork_id_array = np.asarray(artwork_id_list)
@@ -290,8 +293,9 @@ def recommendartworkbyid():
 	year_array = np.asarray(year_list)
 	artist_name_array = np.asarray(artist_name_list)
 	museum_name_array = np.asarray(museum_name_list)
+	exhibition_name_array = np.asarray(exhibition_name_list)
 
-	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array, exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
 	if len(df)!=0:
@@ -301,16 +305,17 @@ def recommendartworkbyid():
 
 	return render_template("index.html", rec = rec, artworkidtable = df.to_html(), **context)
 
+# Recommend Artwork by Title
 @app.route('/recommendartworkbytitle',methods = ['POST'])
 def recommendartworkbytitle():
 	title = request.form.get('get_title')
 
 	if title != "all":
-		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.title = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(title)
+		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE A1.title = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id;".format(title)
 		artworkquery = conn.execute(q, (title))
 
 	else:
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id")
 
 	artwork_id_list = []
 	title_list = []
@@ -319,6 +324,7 @@ def recommendartworkbytitle():
 	year_list = []
 	artist_name_list = []
 	museum_name_list = []
+	exhibition_name_list = []
 
 	for q in artworkquery:
 		artwork_id_list.append(q['artwork_id'])
@@ -328,6 +334,7 @@ def recommendartworkbytitle():
 		year_list.append(q['year'])
 		artist_name_list.append(q['artist_name'])
 		museum_name_list.append(q['museum_name'])
+		exhibition_name_list.append(q['exhibition_name'])
 
 	
 	artwork_id_array = np.asarray(artwork_id_list)
@@ -337,8 +344,9 @@ def recommendartworkbytitle():
 	year_array = np.asarray(year_list)
 	artist_name_array = np.asarray(artist_name_list)
 	museum_name_array = np.asarray(museum_name_list)
+	exhibition_name_array = np.asarray(exhibition_name_list)
 
-	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
 	if len(df)!=0:
@@ -348,16 +356,17 @@ def recommendartworkbytitle():
 
 	return render_template("index.html", rec = rec, artworktitletable = df.to_html(), **context)
 
+# recommend artwork by place created
 @app.route('/recommendartworkbyplacecreated',methods = ['POST'])
 def recommendartworkbyplacecreated():
 
 	place_created = request.form.get('get_place_created')
 
 	if place_created != "all":
-		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.place_created = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(place_created)
+		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE A1.place_created = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id;".format(place_created)
 		artworkquery = conn.execute(q, (place_created))
 	else:
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id")
 
 	artwork_id_list = []
 	title_list = []
@@ -366,6 +375,7 @@ def recommendartworkbyplacecreated():
 	year_list = []
 	artist_name_list = []
 	museum_name_list = []
+	exhibition_name_list = []
 
 	for q in artworkquery:
 		artwork_id_list.append(q['artwork_id'])
@@ -375,7 +385,7 @@ def recommendartworkbyplacecreated():
 		year_list.append(q['year'])
 		artist_name_list.append(q['artist_name'])
 		museum_name_list.append(q['museum_name'])
-
+		exhibition_name_list.append(q['exhibition_name'])
 	
 	artwork_id_array = np.asarray(artwork_id_list)
 	title_array = np.asarray(title_list)
@@ -384,8 +394,9 @@ def recommendartworkbyplacecreated():
 	year_array = np.asarray(year_list)
 	artist_name_array = np.asarray(artist_name_list)
 	museum_name_array = np.asarray(museum_name_list)
+	exhibition_name_array = np.asarray(exhibition_name_list)
 
-	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
 	if len(df)!=0:
@@ -400,11 +411,11 @@ def recommendartworkbymedium():
 	medium = request.form.get('get_medium')
 
 	if medium != "all":
-		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.medium = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id;".format(medium)
+		q = "SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE A1.medium = %s and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id;".format(medium)
 		artworkquery = conn.execute(q, (medium))
 
 	else:
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id")
 
 	artwork_id_list = []
 	title_list = []
@@ -413,6 +424,7 @@ def recommendartworkbymedium():
 	year_list = []
 	artist_name_list = []
 	museum_name_list = []
+	exhibition_name_list = []
 
 	for q in artworkquery:
 		artwork_id_list.append(q['artwork_id'])
@@ -422,7 +434,7 @@ def recommendartworkbymedium():
 		year_list.append(q['year'])
 		artist_name_list.append(q['artist_name'])
 		museum_name_list.append(q['museum_name'])
-
+		exhibition_name_list.append(q['exhibition_name'])
 	
 	artwork_id_array = np.asarray(artwork_id_list)
 	title_array = np.asarray(title_list)
@@ -431,8 +443,9 @@ def recommendartworkbymedium():
 	year_array = np.asarray(year_list)
 	artist_name_array = np.asarray(artist_name_list)
 	museum_name_array = np.asarray(museum_name_list)
+	exhibition_name_array = np.asarray(exhibition_name_list)
 
-	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
 	if len(df)!=0:
@@ -447,9 +460,9 @@ def recommendartworkbyyear():
 	year = request.form.get('get_year')
 
 	if year != "all":
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE A1.year = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id".format(year))
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE A1.year = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id".format(year))
 	else:
-		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name FROM artworks_is_at A1, artists A2, museums M, creates C WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id")
+		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id")
 
 	artwork_id_list = []
 	title_list = []
@@ -458,6 +471,7 @@ def recommendartworkbyyear():
 	year_list = []
 	artist_name_list = []
 	museum_name_list = []
+	exhibition_name_list = []
 
 	for q in artworkquery:
 		artwork_id_list.append(q['artwork_id'])
@@ -467,7 +481,7 @@ def recommendartworkbyyear():
 		year_list.append(q['year'])
 		artist_name_list.append(q['artist_name'])
 		museum_name_list.append(q['museum_name'])
-
+		exhibition_name_list.append(q['exhibition_name'])
 	
 	artwork_id_array = np.asarray(artwork_id_list)
 	title_array = np.asarray(title_list)
@@ -476,8 +490,9 @@ def recommendartworkbyyear():
 	year_array = np.asarray(year_list)
 	artist_name_array = np.asarray(artist_name_list)
 	museum_name_array = np.asarray(museum_name_list)
+	exhibition_name_array = np.asarray(exhibition_name_list)
 
-	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name'])
+	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
 	if len(df)!=0:
