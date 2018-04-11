@@ -50,10 +50,10 @@ loggedinid = 0
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-def login(n):
+def login(self, n):
 	loggedinid = n
 
-def logout(n):
+def logout():
 	loggedinid = 0
 
 
