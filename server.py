@@ -214,9 +214,25 @@ def index():
 #def newuser():
 #  return render_template("newuser.html")
 
+# Example of adding new data to the database
+@app.route('/add', methods=['POST'])
+def add():
+	name = request.form['name']
+	g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
+	return redirect('/')
+
+
 @app.route('/adduser,'methods=['POST'])
 def adduser():
 	new_user_name = request.form.get('new_user_name')
+	countusers = conn.execute("SELECT COUNT(*) FROM users")
+	count = 0
+	for u in countusers:
+		count = u[0]
+	count += 1
+	print(count)
+	#q = "INSERT INTO users VALUES (,%s)", new_user_name
+	#conn.execute("INSERT INTO users VALUES ((,%s)", new_user_name)
 	
 
 @app.route('/recommendmuseum',methods = ['POST'])
