@@ -206,6 +206,26 @@
     {% endblock museumcontent %}
   </div> 
 
+<!-- SEARCH FOR ARTISTS BY MOVEMENT -->
+  <h2>Search for Artists by Movement</h2>
+  <form method="POST" action="/searchartistbymovement">
+    <p>Select name of movement<br>
+    <select name="get_movement">
+    <option value="all" selected>Any</option>
+    {% for z in movement_names %}
+      <option value = "{{ z }}">{{ z }}</option>
+    {% endfor %}<br>
+    </select></p>
+
+    <input type="submit" value="Search for artist by movement">
+  </form>
+
+  <div>
+    {% block artistcontent %}
+    {{artisttable | safe}}
+    {% endblock artistcontent %}
+  </div> 
+
 
  
 

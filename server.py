@@ -85,7 +85,12 @@ def update():
 	for result in mus_name:
 		mus_names.append(result['name'])
 
-	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names)
+	mov_name = conn.execute("SELECT DISTINCT name FROM movements ORDER BY name")
+	mov_names = []
+	for result in mov_name:
+		mov_names.append(result['name'])
+
+	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names, movement_names = mov_names)
 
 	return context
 
@@ -642,6 +647,35 @@ def getuserinfo():
 
 	context = update()
 	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), **context)
+
+
+@app.route('/searchartistbymovement',methods = ['POST'])
+def searchartistbymovement():
+	movement = request.form.get('get_movement')
+
+	if movement != "all":
+		artistquery = conn.execute("SELECT A.name AS artist_name FROM participates_in P, artists A, Movements M WHERE M.name = '{}' and M.name = P.name and P.artist_id = A.artist_id".format(movement))
+	else:
+		artistquery = conn.execute("SELECT A.name AS artist_name FROM participates_in P, artists A, Movements M WHERE M.name = P.name and P.artist_id = A.artist_id")
+
+	artist_list = []
+
+	for q in artistquery:
+		artist_list.append(q['artist_name'])
+
+	artist_array = np.asarray(artist_list)
+
+	df_artist = pd.DataFrame(list(zip(artist_array)),columns=['Artist Name'])
+	df_artist.index = np.arange(1, len(df_artist) + 1) 
+	
+	if len(df_artist)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+	context = update()
+	return render_template("index.html", rec = rec, artisttable = df_artist.to_html(), **context)
+
 
 
 
