@@ -222,7 +222,7 @@ def add():
 	return redirect('/')
 
 
-@app.route('/adduser,'methods=['POST'])
+@app.route('/adduser',methods=['POST'])
 def adduser():
 	new_user_name = request.form.get('new_user_name')
 	countusers = conn.execute("SELECT COUNT(*) FROM users")
@@ -620,11 +620,11 @@ def getuserinfo():
 
 
 # Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-	name = request.form['name']
-	g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
-	return redirect('/')
+#@app.route('/add', methods=['POST'])
+#def add():
+#	name = request.form['name']
+#	g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
+#	return redirect('/')
 
 
 @app.route('/login')
