@@ -48,10 +48,11 @@ conn = engine.connect();
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-user_names = conn.execute("SELECT name FROM users")
+user_names = conn.execute("SELECT user_id, name FROM users")
 names = []
 for result in user_names:
-	names.append(result['name'])
+	nameandid = result['name'] + "(user id = " +result['user_id']+")"
+	names.append(nameandid)
 
 art_id = conn.execute("SELECT artwork_id FROM artworks_is_at ORDER BY artwork_id::int")
 art_ids = []
@@ -230,9 +231,10 @@ def adduser():
 	for u in countusers:
 		count = u[0]
 	count += 1
-	print(count)
+	#print(count)
 	#q = "INSERT INTO users VALUES (,%s)", new_user_name
-	#conn.execute("INSERT INTO users VALUES ((,%s)", new_user_name)
+	conn.execute("INSERT INTO users VALUES (%s,%s)", count, new_user_name)
+	return redirect('/')
 	
 
 @app.route('/recommendmuseum',methods = ['POST'])
