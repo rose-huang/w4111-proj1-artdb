@@ -48,45 +48,46 @@ conn = engine.connect();
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
-user_names = conn.execute("SELECT user_id, name FROM users")
-names = []
-for result in user_names:
-	nameandid = result['name'] + "(user id = " +result['user_id']+")"
-	names.append(nameandid)
+def update():
+	user_names = conn.execute("SELECT user_id, name FROM users")
+	names = []
+	for result in user_names:
+		nameandid = result['name'] + " (user id = " +result['user_id']+")"
+		names.append(nameandid)
 
-art_id = conn.execute("SELECT artwork_id FROM artworks_is_at ORDER BY artwork_id::int")
-art_ids = []
-for result in art_id:
-	art_ids.append(result['artwork_id'])
+	art_id = conn.execute("SELECT artwork_id FROM artworks_is_at ORDER BY artwork_id::int")
+	art_ids = []
+	for result in art_id:
+		art_ids.append(result['artwork_id'])
 
-art_medium = conn.execute("SELECT DISTINCT medium FROM artworks_is_at ORDER BY medium")
-art_mediums = []
-for result in art_medium:
-	art_mediums.append(result['medium'])
+	art_medium = conn.execute("SELECT DISTINCT medium FROM artworks_is_at ORDER BY medium")
+	art_mediums = []
+	for result in art_medium:
+		art_mediums.append(result['medium'])
 
-art_place = conn.execute("SELECT DISTINCT place_created FROM artworks_is_at  WHERE place_created != 'NULL' ORDER BY place_created")
-art_places = []
-for result in art_place:
-	art_places.append(result['place_created'])
+	art_place = conn.execute("SELECT DISTINCT place_created FROM artworks_is_at  WHERE place_created != 'NULL' ORDER BY place_created")
+	art_places = []
+	for result in art_place:
+		art_places.append(result['place_created'])
 
-art_title = conn.execute("SELECT DISTINCT title FROM artworks_is_at ORDER BY title")
-art_titles = []
-for result in art_title:
-	art_titles.append(result['title'])
+	art_title = conn.execute("SELECT DISTINCT title FROM artworks_is_at ORDER BY title")
+	art_titles = []
+	for result in art_title:
+		art_titles.append(result['title'])
 
-art_year = conn.execute("SELECT DISTINCT year FROM artworks_is_at ORDER BY year")
-art_years = []
-for result in art_year:
-	art_years.append(result['year'])
+	art_year = conn.execute("SELECT DISTINCT year FROM artworks_is_at ORDER BY year")
+	art_years = []
+	for result in art_year:
+		art_years.append(result['year'])
 
-mus_name = conn.execute("SELECT DISTINCT name FROM museums ORDER BY name")
-mus_names = []
-for result in mus_name:
-	mus_names.append(result['name'])
+	mus_name = conn.execute("SELECT DISTINCT name FROM museums ORDER BY name")
+	mus_names = []
+	for result in mus_name:
+		mus_names.append(result['name'])
 
+	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names)
 
-
-context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names)
+	return context
 
 #engine.execute("""CREATE TABLE IF NOT EXISTS test (
 #  id serial,
@@ -194,6 +195,7 @@ def index():
 	# render_template looks in the templates/ folder for files.
 	# for example, the below file reads template/index.html
 	#
+	context = update()
 	return render_template("index.html", **context)
 
 
@@ -271,7 +273,7 @@ def recommendmuseum():
 			rec = 'Here are our recommendations:'
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
+	context = update()
 	return render_template("index.html", rec = rec, museumtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyid',methods = ['POST'])
@@ -321,6 +323,7 @@ def recommendartworkbyid():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	context = update()
 	return render_template("index.html", rec = rec, artworkidtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbytitle',methods = ['POST'])
@@ -368,6 +371,7 @@ def recommendartworkbytitle():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	context = update()
 	return render_template("index.html", rec = rec, artworktitletable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyplacecreated',methods = ['POST'])
@@ -415,6 +419,7 @@ def recommendartworkbyplacecreated():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	context = update()
 	return render_template("index.html", rec = rec, artworkplacecreatedtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbymedium',methods = ['POST'])
@@ -461,7 +466,7 @@ def recommendartworkbymedium():
 			rec = 'Here are our recommendations:'
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
+	context = update()
 	return render_template("index.html", rec = rec, artworkmediumtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyyear',methods = ['POST'])
@@ -507,6 +512,7 @@ def recommendartworkbyyear():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	context = update()
 	return render_template("index.html", rec = rec, artworkyeartable = df.to_html(), **context)
 
 @app.route('/getuserinfo',methods = ['POST'])
@@ -615,7 +621,7 @@ def getuserinfo():
 	df_userrec = pd.DataFrame(list(zip(userrec_art_title_array, userrec_artist_name_array, userrec_move_name_array, userrec_mus_name_array)),columns=['Artwork Title', 'Artist Name', 'Movement Name', 'Museum Name'])
 	df_userrec.index = np.arange(1, len(df_userrec) + 1) 
 
-
+	context = update()
 	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), **context)
 
 
