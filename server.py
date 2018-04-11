@@ -492,6 +492,7 @@ def getuserinfo():
 
 	user = request.form.get('get_user')
 
+	# user's artworks
 	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.name = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(user)
 	userartworkquery = conn.execute(qlikes1, (user))
 
@@ -510,6 +511,7 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	# user's artists
 	qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(user)
 	userartistquery = conn.execute(qlikes2, (user))
 
@@ -528,6 +530,7 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	# user's movement
 	qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = %s and U.user_id = L.user_id and L.name = M.name;".format(user)
 	usermovementquery = conn.execute(qlikes3, (user))
 
@@ -546,6 +549,24 @@ def getuserinfo():
 	else:
 			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
+	# user's visited museums
+	visited = "SELECT M.name FROM museums M, visited V, users U WHERE U.name = %s and U.user_id = V.user_id and M.museum_id = V.museum_id;".format(user)
+	uservisitedquery = conn.execute(visited, (user))
+
+	visted_list = []
+
+	for q in uservisitedquery:
+		visted_list.append(q['name'])
+
+	visited_array = np.asarray(visted_list)
+
+	df_visited = pd.DataFrame(list(zip(visited_array)), columns=['Visited Museum Name'])
+	df_visited.index = np.arange(1, len(df_movement) + 1) 
+
+	if len(df_movement)!=0:
+			rec = 'Here are our recommendations:'
+	else:
+			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
 	#the actual recommendations
 	qrec = "(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = %s and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = %s and U.user_id = L.user_id and L.name = M.name))".format(user, user)
@@ -573,7 +594,7 @@ def getuserinfo():
 	df_userrec.index = np.arange(1, len(df_userrec) + 1) 
 
 
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), userrectable = df_userrec.to_html(), **context)
+	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), **context)
 
 
 
