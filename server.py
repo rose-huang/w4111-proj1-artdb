@@ -44,9 +44,20 @@ DATABASEURI = "postgresql://rh2805:8420@35.227.79.146/proj1part2"
 #
 engine = create_engine(DATABASEURI)
 conn = engine.connect();
+#global variable for user login
+loggedinid = 0
 #
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
+
+def userlogin(n):
+	global loggedinid
+	loggedinid = n
+
+def userlogout():
+	global loggedinid 
+	loggedinid = 0
+
 
 def update():
 	user_names = conn.execute("SELECT user_id, name FROM users")
@@ -542,11 +553,14 @@ def getuserinfo():
 	userinfo = user.split(" (user id = ")
 	user = userinfo[1]
 	user = user[:-1]
-	print(user)
+	userlogin(user)
+	print("user id from html is " + user)
+	print("logged in user is " + str(loggedinid))
+
 
 	# user's artworks
-	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.user_id = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(user)
-	userartworkquery = conn.execute(qlikes1, (user))
+	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.user_id = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(loggedinid)
+	userartworkquery = conn.execute(qlikes1, (loggedinid))
 
 	title_list = []
 
