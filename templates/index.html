@@ -17,17 +17,18 @@
     {% endfor %}
   </div>-->
 
-  <!-- ADD USER -->
+  <!-- ADD USER 
 <h2>Create a User</h2>
 <form method="POST" action="/adduser">
     <p>What is your name?<br>
     <input type = "text" name = "new_user_name">
     <input type="submit" value="Create a user"></p>
-  </form>
+  </form>-->
+
 
   <!-- USER RECS -->
- <h2>Get user info and recommendations</h2>
-  <form method="POST" action="/getuserinfo">
+<!--  <form method="POST" action="/getuserinfo">
+    
     <p>Select user<br>
       <select name="get_user">
       {% for un in user_names %}
@@ -35,14 +36,83 @@
       {% endfor %}<br>
     </select></p>
     <input type="submit" value="Get user information">
-  </form>
+  </form>-->
 
+    
   <div>
-    {% block userartwork_content %}
-    {{userartworktable | safe}}
-    {% endblock %}
-  </div>
-<br>
+    {% if loggedinid == 0 %}
+    You are not logged in. <br>
+    Please log in or create new user and log in if you want to add preferences and/or receive recommendations.
+    <form method="POST" action="/">
+        <p><b>Log in as:</b><br>
+        <select name="get_user">
+        {% for un in user_names %}
+        <option value = "{{ un }}">{{ un }}</option>
+        {% endfor %}
+        </select></p>
+        <input type="submit" value="Login">
+    </form>
+
+      <!-- ADD USER -->
+    <br><b>Create a user</b><br>
+    <form method="POST" action="/adduser">
+      <br>Please enter your name (at least one character)<br>
+      <input type = "text" name = "new_user_name">
+      <input type="submit" value="Create a user">
+    </form>
+
+    {% else %}
+    You are logged in as user {{loggedinid}}
+
+        <form method="POST" action="/">
+        <input type="submit" name = "logout" value="Logout">
+        </form>
+
+        <form method="POST" action="/getuserinfo">
+        <input type="submit" name = "recs" value="Get user information">
+        </form>
+
+        {{ likemessage }}
+        {{userartworktable | safe}}<br>
+        {{userartisttable | safe}}<br>
+        {{usermovementtable | safe}}<br>
+        {{uservisitedtable | safe}}<br>
+        
+        {{ recmessage }}<br>
+        {{userrectable | safe}}<br>
+
+    {% endif %}
+
+    <!--{% block userrecs %}
+    
+      {% if loggedinid == 0 %}
+        <<form method="POST" action="/getuserinfo">
+          <form method="POST" action="/getuserinfo">
+            <p>Select user<br>
+            <select name="get_user">
+            {% for un in user_names %}
+            <option value = "{{ un }}">{{ un }}</option>
+            {% endfor %}<br>
+          </select></p>
+          <input type="submit" value="Get user information">
+        </form>
+      {% else %}<br>
+        You have indicated that you like: 
+        {{userartworktable | safe}}<br>
+        {{userartisttable | safe}}<br>
+        {{usermovementtable | safe}}<br>
+        {{uservisitedtable | safe}}<br>
+        Based on your preferences, we recommend these artworks:<br>
+        {{userrectable | safe}}<br>
+
+        <form method="POST" action="/">
+        <input type="submit" name = "logout" value="Logout">
+        </form>
+    
+      {% endif %}
+    {% endblock userrecs %}
+  </div>-->
+<!--<br>
   <div>
     {% block userartist_content %}
     {{userartisttable | safe}}
@@ -67,7 +137,7 @@
     {% block userrec_content %}
     {{userrectable | safe}}
     {% endblock userrec_content %}
-  </div>
+  </div>-->
 
 <!-- USER ADD LIKES 
 <h2>Add user preferences</h2>
