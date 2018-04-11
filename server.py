@@ -105,9 +105,15 @@ def update():
 	for result in mov_name:
 		mov_names.append(result['name'])
 
+	artid_title = conn.execute("SELECT artwork_id, title FROM artworks_is_at ORDER BY artwork_id::int")
+	artid_titles = []
+	for result in artid_title:
+		idandtitle = result['artwork_id'] + " - " +result['title']
+		artid_titles.append(idandtitle)
+
 	print("logged in id is ")
 	print(loggedinid)
-	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names, movement_names = mov_names, loggedinid = loggedinid)
+	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names, movement_names = mov_names, artid_titles = artid_titles, loggedinid = loggedinid)
 
 	return context
 
@@ -257,12 +263,6 @@ def index():
 #  return render_template("newuser.html")
 
 # Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-	name = request.form['name']
-	g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
-	return redirect('/')
-
 
 @app.route('/adduser',methods=['POST'])
 def adduser():
@@ -278,6 +278,18 @@ def adduser():
 		conn.execute("INSERT INTO users VALUES (%s,%s)", count, new_user_name)
 	return redirect('/')
 	
+@app.route('/addartworkpref',methods=['POST'])
+def addartworkpref():
+	art_pref = request.form.get('art_pref')
+	art_prefs = art_pref.split(" - ")
+	art_pref_id = art_prefs[0] 
+
+	pref = conn.execute("SELECT COUNT(*) FROM likes1 WHERE user_id = %s AND artwork_id = %s", loggedinid, art_pref_id)
+	for u in pref:
+		count = u[0]
+	if count == 0:
+		conn.execute("INSERT INTO likes1 VALUES (%s,%s)", loggedinid, art_pref_id)
+	return redirect('/')
 
 @app.route('/recommendmuseum',methods = ['POST'])
 def recommendmuseum():

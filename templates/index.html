@@ -54,7 +54,7 @@
     </form>
 
       <!-- ADD USER -->
-    <br><b>Create a user</b><br>
+    <br><b>Create a user</b>
     <form method="POST" action="/adduser">
       <br>Please enter your name (at least one character)<br>
       <input type = "text" name = "new_user_name">
@@ -67,6 +67,21 @@
         <form method="POST" action="/">
         <input type="submit" name = "logout" value="Logout">
         </form>
+        <br>
+        <b>Add preferences and museums visited</b>
+
+
+        <form method="POST" action="/addartworkpref">
+        <select name="art_pref">
+        {% for a in artid_titles %}
+        <option value = "{{a}}">{{a}}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="Add artwork preferences">
+        </form><br>
+
+
+
 
         <form method="POST" action="/getuserinfo">
         <input type="submit" name = "recs" value="Get user information">
