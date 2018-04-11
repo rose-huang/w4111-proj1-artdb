@@ -214,6 +214,10 @@ def index():
 #def newuser():
 #  return render_template("newuser.html")
 
+@app.route('/adduser,'methods=['POST'])
+def adduser():
+	new_user_name = request.form.get('new_user_name')
+	
 
 @app.route('/recommendmuseum',methods = ['POST'])
 def recommendmuseum():
