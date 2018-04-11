@@ -16,6 +16,15 @@
     <div>{{n}}</div>
     {% endfor %}
   </div>-->
+
+  <!-- ADD USER -->
+<h2>Create a User</h2>
+<form method="POST" action="/adduser">
+    <p>What is your name?<br>
+    <input type = "text" name = "new_user_name">
+    <input type="submit" value="Create a user"></p>
+  </form>
+
   <!-- USER RECS -->
  <h2>Get user info and recommendations</h2>
   <form method="POST" action="/getuserinfo">
@@ -59,6 +68,18 @@
     {{userrectable | safe}}
     {% endblock userrec_content %}
   </div>
+
+<!-- USER ADD LIKES 
+<h2>Add user preferences</h2>
+<form method="POST" action="/adduserlikes">
+    <p>Select user<br>
+      <select name="get_user">
+      {% for un in user_names %}
+      <option value = "{{ un }}">{{ un }}</option>
+      {% endfor %}<br>
+    </select></p>
+    <input type="submit" value="Get user information">
+  </form>-->
 
 
 <!-- SEARCH FOR ARTWORKS -->
