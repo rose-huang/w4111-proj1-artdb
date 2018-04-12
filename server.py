@@ -172,7 +172,7 @@ def addartworkpref():
 	pref = conn.execute("SELECT COUNT(*) FROM likes1 WHERE user_id = %s AND artwork_id = %s", loggedinid, art_pref_id)
 	for u in pref:
 		count = u[0]
-	if count == 0:
+	if count == 0 and loggedinid != 0:
 		conn.execute("INSERT INTO likes1 VALUES (%s,%s)", loggedinid, art_pref_id)
 	return redirect('/')
 
@@ -185,7 +185,7 @@ def addartistpref():
 	pref = conn.execute("SELECT COUNT(*) FROM likes2 WHERE user_id = %s AND artist_id = %s", loggedinid, artist_pref_id)
 	for u in pref:
 		count = u[0]
-	if count == 0:
+	if count == 0 and loggedinid != 0:
 		conn.execute("INSERT INTO likes2 VALUES (%s,%s)", loggedinid, artist_pref_id)
 	return redirect('/')
 
@@ -196,7 +196,7 @@ def addmovementpref():
 	pref = conn.execute("SELECT COUNT(*) FROM likes3 WHERE user_id = %s AND name = %s", loggedinid, movement_pref)
 	for u in pref:
 		count = u[0]
-	if count == 0:
+	if count == 0 and loggedinid != 0:
 		conn.execute("INSERT INTO likes3 VALUES (%s,%s)", movement_pref, loggedinid)
 	return redirect('/')
 
@@ -209,7 +209,7 @@ def addvismus():
 	pref = conn.execute("SELECT COUNT(*) FROM visited WHERE user_id = %s AND museum_id = %s", loggedinid, visitedmus_id)
 	for u in pref:
 		count = u[0]
-	if count == 0:
+	if count == 0 and loggedinid != 0:
 		conn.execute("INSERT INTO visited VALUES (%s,%s)", loggedinid, visitedmus_id)
 	return redirect('/')
 
@@ -566,7 +566,12 @@ def getuserinfo():
 	likemsg = "You have indicated that you like: "
 	recmsg = "Based on your preferences, we recommend these artworks: "
 	musmsg = "You have visited these museums: "
-	return render_template("index.html", userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), likemessage = likemsg, recmessage = recmsg, musmessage = musmsg, **context)
+
+	if loggedinid != 0:
+		return render_template("index.html", userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), likemessage = likemsg, recmessage = recmsg, musmessage = musmsg, **context)
+	else:
+		return redirect('/')
+
 
 
 @app.route('/searchartistbymovement',methods = ['POST'])
