@@ -77,10 +77,35 @@
         <option value = "{{a}}">{{a}}</option>
         {% endfor %}
         </select>
-        <input type="submit" value="Add artwork preferences">
+        <input type="submit" value="Add artwork preference">
         </form><br>
 
+        <form method="POST" action="/addartistpref">
+        <select name="artist_pref">
+        {% for a in artistid_names %}
+        <option value = "{{a}}">{{a}}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="Add artist preference">
+        </form><br>
 
+        <form method="POST" action="/addmovementpref">
+        <select name="movement_pref">
+        {% for m in movement_names %}
+        <option value = "{{m}}">{{m}}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="Add movement preference">
+        </form><br>
+
+        <form method="POST" action="/addvismus">
+        <select name="visited_mus">
+        {% for m in museumid_names %}
+        <option value = "{{m}}">{{m}}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="Add museum you have visited">
+        </form><br>
 
 
         <form method="POST" action="/getuserinfo">
@@ -91,6 +116,8 @@
         {{userartworktable | safe}}<br>
         {{userartisttable | safe}}<br>
         {{usermovementtable | safe}}<br>
+
+        {{ musmessage }}
         {{uservisitedtable | safe}}<br>
         
         {{ recmessage }}<br>
@@ -98,73 +125,6 @@
 
     {% endif %}
 
-    <!--{% block userrecs %}
-    
-      {% if loggedinid == 0 %}
-        <<form method="POST" action="/getuserinfo">
-          <form method="POST" action="/getuserinfo">
-            <p>Select user<br>
-            <select name="get_user">
-            {% for un in user_names %}
-            <option value = "{{ un }}">{{ un }}</option>
-            {% endfor %}<br>
-          </select></p>
-          <input type="submit" value="Get user information">
-        </form>
-      {% else %}<br>
-        You have indicated that you like: 
-        {{userartworktable | safe}}<br>
-        {{userartisttable | safe}}<br>
-        {{usermovementtable | safe}}<br>
-        {{uservisitedtable | safe}}<br>
-        Based on your preferences, we recommend these artworks:<br>
-        {{userrectable | safe}}<br>
-
-        <form method="POST" action="/">
-        <input type="submit" name = "logout" value="Logout">
-        </form>
-    
-      {% endif %}
-    {% endblock userrecs %}
-  </div>-->
-<!--<br>
-  <div>
-    {% block userartist_content %}
-    {{userartisttable | safe}}
-    {% endblock userartist_content %}
-  </div>
-<br>
-  <div>
-    {% block usermovement_content %}
-    {{usermovementtable | safe}}
-    {% endblock usermovement_content %}
-  </div>
-<br>
-<br>
-  <div>
-    {% block uservisited_content %}
-    {{uservisitedtable | safe}}
-    {% endblock uservisited_content %}
-  </div>
-<br>
-  <h3> user recommendations </h3>
-  <div>
-    {% block userrec_content %}
-    {{userrectable | safe}}
-    {% endblock userrec_content %}
-  </div>-->
-
-<!-- USER ADD LIKES 
-<h2>Add user preferences</h2>
-<form method="POST" action="/adduserlikes">
-    <p>Select user<br>
-      <select name="get_user">
-      {% for un in user_names %}
-      <option value = "{{ un }}">{{ un }}</option>
-      {% endfor %}<br>
-    </select></p>
-    <input type="submit" value="Get user information">
-  </form>-->
 
 
 <!-- SEARCH FOR ARTWORKS -->

@@ -2,7 +2,6 @@
 
 """
 Columbia's COMS W4111.001 Introduction to Databases
-Example Webserver
 
 To run locally:
 
@@ -10,8 +9,6 @@ To run locally:
 
 Go to http://localhost:8111 in your browser.
 
-A debugger such as "pdb" may be helpful for debugging.
-Read about it online.
 """
 
 import os
@@ -25,18 +22,6 @@ tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
 
-#
-# The following is a dummy URI that does not connect to a valid database. You will need to modify it to connect to your Part 2 database in order to use the data.
-#
-# XXX: The URI should be in the format of: 
-#
-#     postgresql://USER:PASSWORD@35.227.79.146/proj1part2
-#
-# For example, if you had username gravano and password foobar, then the following line would be:
-#
-#     DATABASEURI = "postgresql://gravano:foobar@35.227.79.146/proj1part2"
-#
-
 DATABASEURI = "postgresql://rh2805:8420@35.227.79.146/proj1part2"
 
 #
@@ -45,10 +30,8 @@ DATABASEURI = "postgresql://rh2805:8420@35.227.79.146/proj1part2"
 engine = create_engine(DATABASEURI)
 conn = engine.connect();
 #global variable for user login
+#note: only one user can log in at a time 
 loggedinid = 0
-#
-# Example of running queries in your database
-# Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 
 def userlogin(n):
 	global loggedinid
@@ -60,9 +43,6 @@ def userlogout():
 
 
 def update():
-
-#	if request.form.get("logout") == "Logout":
-#		userlogout()
 
 	user_names = conn.execute("SELECT user_id, name FROM users")
 	names = []
@@ -111,28 +91,27 @@ def update():
 		idandtitle = result['artwork_id'] + " - " +result['title']
 		artid_titles.append(idandtitle)
 
+	artistid_name = conn.execute("SELECT artist_id, name FROM artists ORDER BY artist_id::int")
+	artistid_names = []
+	for result in artistid_name:
+		idandname = result['artist_id'] + " - " +result['name']
+		artistid_names.append(idandname)
+
+	museumid_name = conn.execute("SELECT museum_id, name FROM museums ORDER BY museum_id::int")
+	museumid_names = []
+	for result in museumid_name:
+		idandname = result['museum_id'] + " - " +result['name']
+		museumid_names.append(idandname)
+
 	print("logged in id is ")
 	print(loggedinid)
-	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names, movement_names = mov_names, artid_titles = artid_titles, loggedinid = loggedinid)
+	context = dict(user_names = names, artwork_ids = art_ids, artwork_mediums = art_mediums, artwork_place_created = art_places, artwork_titles = art_titles, artwork_years = art_years, museum_names = mus_names, movement_names = mov_names, artid_titles = artid_titles, artistid_names = artistid_names, loggedinid = loggedinid, museumid_names = museumid_names)
 
 	return context
 
-#engine.execute("""CREATE TABLE IF NOT EXISTS test (
-#  id serial,
-#  name text
-#);""")
-#engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
-
-
 @app.before_request
 def before_request():
-	"""
-	This function is run at the beginning of every web request 
-	(every time you enter an address in the web browser).
-	We use it to setup a database connection that can be used throughout the request.
 
-	The variable g is globally accessible.
-	"""
 	try:
 		g.conn = engine.connect()
 	except:
@@ -142,29 +121,13 @@ def before_request():
 
 @app.teardown_request
 def teardown_request(exception):
-	"""
-	At the end of the web request, this makes sure to close the database connection.
-	If you don't, the database could run out of memory!
-	"""
+
 	try:
 		g.conn.close()
 	except Exception as e:
 		pass
 
 
-#
-# @app.route is a decorator around index() that means:
-#   run index() whenever the user tries to access the "/" path using a GET request
-#
-# If you wanted the user to go to, for example, localhost:8111/foobar/ with POST or GET then you could use:
-#
-#       @app.route("/foobar/", methods=["POST", "GET"])
-#
-# PROTIP: (the trailing / in the path is important)
-# 
-# see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
-# see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
-#
 @app.route('/', methods=['GET','POST'])
 def index():
 
@@ -174,8 +137,6 @@ def index():
 		user = userinfo[1]
 		user = user[:-1]
 		userlogin(user)
-		print("user id from html is " + user)
-		print("logged in user is " + str(loggedinid))
 
 	if request.form.get("logout") == "Logout":
 		userlogout()
@@ -183,86 +144,12 @@ def index():
 	if request.form.get("logout") == "Logout":
 		userlogout()
 
-	"""
-	request is a special object that Flask provides to access web request information:
-
-	request.method:   "GET" or "POST"
-	request.form:     if the browser submitted a form, this contains the data in the form
-	request.args:     dictionary of URL arguments, e.g., {a:1, b:2} for http://localhost?a=1&b=2
-
-	See its API: http://flask.pocoo.org/docs/0.10/api/#incoming-request-data
-	"""
-
-	# DEBUG: this is debugging code to see what request looks like
 	print request.args
 
-
-	#
-	# example of a database query
-	#
-#	user_names = g.conn.execute("SELECT name FROM users")
-#	names = []
-#	for result in user_names:
-#		names.append(result['name'])  # can also be accessed using result[0]
-	#user_names.close()
-
-	#
-	# Flask uses Jinja templates, which is an extension to HTML where you can
-	# pass data to a template and dynamically generate HTML based on the data
-	# (you can think of it as simple PHP)
-	# documentation: https://realpython.com/blog/python/primer-on-jinja-templating/
-	#
-	# You can see an example template in templates/index.html
-	#
-	# context are the variables that are passed to the template.
-	# for example, "data" key in the context variable defined below will be 
-	# accessible as a variable in index.html:
-	#
-	#     # will print: [u'grace hopper', u'alan turing', u'ada lovelace']
-	#     <div>{{data}}</div>
-	#     
-	#     # creates a <div> tag for each element in data
-	#     # will print: 
-	#     #
-	#     #   <div>grace hopper</div>
-	#     #   <div>alan turing</div>
-	#     #   <div>ada lovelace</div>
-	#     #
-	#     {% for n in data %}
-	#     <div>{{n}}</div>
-	#     {% endfor %}
-	#
-	#context = dict(user_names = names)
-
-
-	#
-	# render_template looks in the templates/ folder for files.
-	# for example, the below file reads template/index.html
-	#
 	context = update()
 
 	return render_template("index.html", **context)
 
-
-#
-# This is an example of a different path.  You can see it at:
-# 
-#     localhost:8111/another
-#
-# Notice that the function name is another() rather than index()
-# The functions for each app.route need to have different names
-#
-
-
-#@app.route('/another')
-#def another():
-#  return render_template("another.html")
-
-#@app.route('/newuser')
-#def newuser():
-#  return render_template("newuser.html")
-
-# Example of adding new data to the database
 
 @app.route('/adduser',methods=['POST'])
 def adduser():
@@ -273,8 +160,6 @@ def adduser():
 		for u in countusers:
 			count = u[0]
 		count += 1
-		#print(count)
-		#q = "INSERT INTO users VALUES (,%s)", new_user_name
 		conn.execute("INSERT INTO users VALUES (%s,%s)", count, new_user_name)
 	return redirect('/')
 	
@@ -290,6 +175,44 @@ def addartworkpref():
 	if count == 0:
 		conn.execute("INSERT INTO likes1 VALUES (%s,%s)", loggedinid, art_pref_id)
 	return redirect('/')
+
+@app.route('/addartistpref',methods=['POST'])
+def addartistpref():
+	artist_pref = request.form.get('artist_pref')
+	artist_prefs = artist_pref.split(" - ")
+	artist_pref_id = artist_prefs[0] 
+
+	pref = conn.execute("SELECT COUNT(*) FROM likes2 WHERE user_id = %s AND artist_id = %s", loggedinid, artist_pref_id)
+	for u in pref:
+		count = u[0]
+	if count == 0:
+		conn.execute("INSERT INTO likes2 VALUES (%s,%s)", loggedinid, artist_pref_id)
+	return redirect('/')
+
+@app.route('/addmovementpref',methods=['POST'])
+def addmovementpref():
+	movement_pref = request.form.get('movement_pref')
+
+	pref = conn.execute("SELECT COUNT(*) FROM likes3 WHERE user_id = %s AND name = %s", loggedinid, movement_pref)
+	for u in pref:
+		count = u[0]
+	if count == 0:
+		conn.execute("INSERT INTO likes3 VALUES (%s,%s)", movement_pref, loggedinid)
+	return redirect('/')
+
+@app.route('/addvismus',methods=['POST'])
+def addvismus():
+	visited_mus = request.form.get('visited_mus')
+	visitedmuss = visited_mus.split(" - ")
+	visitedmus_id = visitedmuss[0] 
+
+	pref = conn.execute("SELECT COUNT(*) FROM visited WHERE user_id = %s AND museum_id = %s", loggedinid, visitedmus_id)
+	for u in pref:
+		count = u[0]
+	if count == 0:
+		conn.execute("INSERT INTO visited VALUES (%s,%s)", loggedinid, visitedmus_id)
+	return redirect('/')
+
 
 @app.route('/recommendmuseum',methods = ['POST'])
 def recommendmuseum():
@@ -321,21 +244,13 @@ def recommendmuseum():
 	df = pd.DataFrame(list(zip(mnames,mlocations,mdiscounts)),columns=['Museum Name', 'Museum Location', 'Discount'])
 	df.index = np.arange(1, len(df) + 1) 
 	
-	if len(df)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 	context = update()
-	return render_template("index.html", rec = rec, museumtable = df.to_html(), **context)
+	return render_template("index.html", museumtable = df.to_html(), **context)
 
 # Recommend Artwork By Artwork ID
 @app.route('/recommendartworkbyid',methods = ['POST'])
 def recommendartworkbyid():
 	artwork_id = request.form.get('get_artwork_id')
-	#title = request.form.get('title')
-	#place_creatd = request.form.get('place_creatd')
-	#medium = request.form.get('get_medium')
-	#year = request.form.get('year')
 
 	if artwork_id != "all":
 		artworkquery = conn.execute("SELECT A1.artwork_id, A1.title, A1.place_created, A1.medium, A1.year, A2.name AS artist_name, M.name AS museum_name, E.name AS exhibition_name FROM artworks_is_at A1, artists A2, museums M, creates C, exhibitions_is_in2 E, is_in3 I WHERE A1.artwork_id = '{}' and C.artwork_id = A1.artwork_id and C.artist_id = A2.artist_id and A1.museum_id = M.museum_id and I.artwork_id = A1.artwork_id and I.exhibition_id = E.exhibition_id".format(artwork_id))
@@ -374,13 +289,8 @@ def recommendartworkbyid():
 	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array, exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
-	if len(df)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
 	context = update()
-	return render_template("index.html", rec = rec, artworkidtable = df.to_html(), **context)
+	return render_template("index.html", artworkidtable = df.to_html(), **context)
 
 # Recommend Artwork by Title
 @app.route('/recommendartworkbytitle',methods = ['POST'])
@@ -426,13 +336,8 @@ def recommendartworkbytitle():
 	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
-	if len(df)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
 	context = update()
-	return render_template("index.html", rec = rec, artworktitletable = df.to_html(), **context)
+	return render_template("index.html", artworktitletable = df.to_html(), **context)
 
 # recommend artwork by place created
 @app.route('/recommendartworkbyplacecreated',methods = ['POST'])
@@ -477,13 +382,8 @@ def recommendartworkbyplacecreated():
 	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
-	if len(df)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
 	context = update()
-	return render_template("index.html", rec = rec, artworkplacecreatedtable = df.to_html(), **context)
+	return render_template("index.html", artworkplacecreatedtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbymedium',methods = ['POST'])
 def recommendartworkbymedium():
@@ -527,12 +427,8 @@ def recommendartworkbymedium():
 	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
-	if len(df)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 	context = update()
-	return render_template("index.html", rec = rec, artworkmediumtable = df.to_html(), **context)
+	return render_template("index.html", artworkmediumtable = df.to_html(), **context)
 
 @app.route('/recommendartworkbyyear',methods = ['POST'])
 def recommendartworkbyyear():
@@ -574,26 +470,11 @@ def recommendartworkbyyear():
 	df = pd.DataFrame(list(zip(artwork_id_array,title_array,place_created_array,medium_array,year_array,artist_name_array,museum_name_array,exhibition_name_array)),columns=['Artwork ID', 'Title', 'Place Created', 'Medium', 'Year', 'Artist Name', 'Museum Name', 'Exhibition Name'])
 	df.index = np.arange(1, len(df) + 1) 
 	
-	if len(df)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
-
 	context = update()
-	return render_template("index.html", rec = rec, artworkyeartable = df.to_html(), **context)
+	return render_template("index.html", artworkyeartable = df.to_html(), **context)
 
 @app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
-
-	#user = request.form.get('get_user')
-	#userinfo = user.split(" (user id = ")
-	#user = userinfo[1]
-	#user = user[:-1]
-	#userlogin(user)
-	#print("user id from html is " + user)
-	#print("logged in user is " + str(loggedinid))
-
 
 	# user's artworks
 	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.user_id = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(loggedinid)
@@ -609,11 +490,6 @@ def getuserinfo():
 	df_artwork = pd.DataFrame(list(zip(title_array)),columns=['Artwork Title'])
 	df_artwork.index = np.arange(1, len(df_artwork) + 1) 
 	
-	if len(df_artwork)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
 	# user's artists
 	qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(loggedinid)
 	userartistquery = conn.execute(qlikes2, (loggedinid))
@@ -628,11 +504,6 @@ def getuserinfo():
 	df_artist = pd.DataFrame(list(zip(artistname_array)),columns=['Artist Name'])
 	df_artist.index = np.arange(1, len(df_artist) + 1) 
 	
-	if len(df_artist)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
 	# user's movement
 	qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name;".format(loggedinid)
 	usermovementquery = conn.execute(qlikes3, (loggedinid))
@@ -664,17 +535,12 @@ def getuserinfo():
 	visited_array = np.asarray(visted_list)
 
 	df_visited = pd.DataFrame(list(zip(visited_array)), columns=['Visited Museum Name'])
-	df_visited.index = np.arange(1, len(df_movement) + 1) 
+	df_visited.index = np.arange(1, len(df_visited) + 1) 
 
-	if len(df_movement)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
 
 	#the actual recommendations
 	qrec = "(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name))"
 	userrecquery = conn.execute(qrec, (loggedinid), (loggedinid)) 
-	#userrecquery = conn.execute("(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.name = '{}' and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.name = '{}' and U.user_id = L.user_id and L.name = M.name))".format(user, user)) 
 
 	userrec_art_title_list = []
 	userrec_artist_name_list = []
@@ -699,7 +565,8 @@ def getuserinfo():
 	context = update()
 	likemsg = "You have indicated that you like: "
 	recmsg = "Based on your preferences, we recommend these artworks: "
-	return render_template("index.html", rec = rec, userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), likemessage = likemsg, recmessage = recmsg, **context)
+	musmsg = "You have visited these museums: "
+	return render_template("index.html", userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), likemessage = likemsg, recmessage = recmsg, musmessage = musmsg, **context)
 
 
 @app.route('/searchartistbymovement',methods = ['POST'])
@@ -721,13 +588,8 @@ def searchartistbymovement():
 	df_artist = pd.DataFrame(list(zip(artist_array)),columns=['Artist Name'])
 	df_artist.index = np.arange(1, len(df_artist) + 1) 
 	
-	if len(df_artist)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
 	context = update()
-	return render_template("index.html", rec = rec, artisttable = df_artist.to_html(), **context)
+	return render_template("index.html", artisttable = df_artist.to_html(), **context)
 
 
 
