@@ -476,98 +476,98 @@ def recommendartworkbyyear():
 @app.route('/getuserinfo',methods = ['POST'])
 def getuserinfo():
 
-	# user's artworks
-	qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.user_id = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(loggedinid)
-	userartworkquery = conn.execute(qlikes1, (loggedinid))
-
-	title_list = []
-
-	for q in userartworkquery:
-		title_list.append(q['title'])
-
-	title_array = np.asarray(title_list)
-
-	df_artwork = pd.DataFrame(list(zip(title_array)),columns=['Artwork Title'])
-	df_artwork.index = np.arange(1, len(df_artwork) + 1) 
-	
-	# user's artists
-	qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(loggedinid)
-	userartistquery = conn.execute(qlikes2, (loggedinid))
-
-	artistname_list = []
-
-	for q in userartistquery:
-		artistname_list.append(q['name'])
-
-	artistname_array = np.asarray(artistname_list)
-
-	df_artist = pd.DataFrame(list(zip(artistname_array)),columns=['Artist Name'])
-	df_artist.index = np.arange(1, len(df_artist) + 1) 
-	
-	# user's movement
-	qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name;".format(loggedinid)
-	usermovementquery = conn.execute(qlikes3, (loggedinid))
-
-	movement_list = []
-
-	for q in usermovementquery:
-		movement_list.append(q['name'])
-
-	movement_array = np.asarray(movement_list)
-
-	df_movement = pd.DataFrame(list(zip(movement_array)),columns=['Movement Name'])
-	df_movement.index = np.arange(1, len(df_movement) + 1) 
-	
-	if len(df_movement)!=0:
-			rec = 'Here are our recommendations:'
-	else:
-			rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
-
-	# user's visited museums
-	visited = "SELECT M.name FROM museums M, visited V, users U WHERE U.user_id = %s and U.user_id = V.user_id and M.museum_id = V.museum_id;".format(loggedinid)
-	uservisitedquery = conn.execute(visited, (loggedinid))
-
-	visted_list = []
-
-	for q in uservisitedquery:
-		visted_list.append(q['name'])
-
-	visited_array = np.asarray(visted_list)
-
-	df_visited = pd.DataFrame(list(zip(visited_array)), columns=['Visited Museum Name'])
-	df_visited.index = np.arange(1, len(df_visited) + 1) 
-
-
-	#the actual recommendations
-	qrec = "(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name))"
-	userrecquery = conn.execute(qrec, (loggedinid), (loggedinid)) 
-
-	userrec_art_title_list = []
-	userrec_artist_name_list = []
-	userrec_move_name_list = []
-	userrec_mus_name_list = []
-
-	for q in userrecquery:
-		userrec_art_title_list.append(q['art_title'])
-		userrec_artist_name_list.append(q['artist_name'])
-		userrec_move_name_list.append(q['mov_name'])
-		userrec_mus_name_list.append(q['mus_name'])
-
-	userrec_art_title_array = np.asarray(userrec_art_title_list)
-	userrec_artist_name_array = np.asarray(userrec_artist_name_list)
-	userrec_move_name_array = np.asarray(userrec_move_name_list)
-	userrec_mus_name_array = np.asarray(userrec_mus_name_list)
-
-
-	df_userrec = pd.DataFrame(list(zip(userrec_art_title_array, userrec_artist_name_array, userrec_move_name_array, userrec_mus_name_array)),columns=['Artwork Title', 'Artist Name', 'Movement Name', 'Museum Name'])
-	df_userrec.index = np.arange(1, len(df_userrec) + 1) 
-
-	context = update()
-	likemsg = "You have indicated that you like: "
-	recmsg = "Based on your preferences, we recommend these artworks: "
-	musmsg = "You have visited these museums: "
-
 	if loggedinid != 0:
+		# user's artworks
+		qlikes1 = "SELECT A.title FROM users U, likes1 L, artworks_is_at A WHERE U.user_id = %s and U.user_id = L.user_id and L.artwork_id = A.artwork_id;".format(loggedinid)
+		userartworkquery = conn.execute(qlikes1, (loggedinid))
+
+		title_list = []
+
+		for q in userartworkquery:
+			title_list.append(q['title'])
+
+		title_array = np.asarray(title_list)
+
+		df_artwork = pd.DataFrame(list(zip(title_array)),columns=['Artwork Title'])
+		df_artwork.index = np.arange(1, len(df_artwork) + 1) 
+		
+		# user's artists
+		qlikes2 = "SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id;".format(loggedinid)
+		userartistquery = conn.execute(qlikes2, (loggedinid))
+
+		artistname_list = []
+
+		for q in userartistquery:
+			artistname_list.append(q['name'])
+
+		artistname_array = np.asarray(artistname_list)
+
+		df_artist = pd.DataFrame(list(zip(artistname_array)),columns=['Artist Name'])
+		df_artist.index = np.arange(1, len(df_artist) + 1) 
+		
+		# user's movement
+		qlikes3 = "SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name;".format(loggedinid)
+		usermovementquery = conn.execute(qlikes3, (loggedinid))
+
+		movement_list = []
+
+		for q in usermovementquery:
+			movement_list.append(q['name'])
+
+		movement_array = np.asarray(movement_list)
+
+		df_movement = pd.DataFrame(list(zip(movement_array)),columns=['Movement Name'])
+		df_movement.index = np.arange(1, len(df_movement) + 1) 
+		
+		if len(df_movement)!=0:
+				rec = 'Here are our recommendations:'
+		else:
+				rec = 'Sorry! Our database is too small to give you any helpful recommendations.'
+
+		# user's visited museums
+		visited = "SELECT M.name FROM museums M, visited V, users U WHERE U.user_id = %s and U.user_id = V.user_id and M.museum_id = V.museum_id;".format(loggedinid)
+		uservisitedquery = conn.execute(visited, (loggedinid))
+
+		visted_list = []
+
+		for q in uservisitedquery:
+			visted_list.append(q['name'])
+
+		visited_array = np.asarray(visted_list)
+
+		df_visited = pd.DataFrame(list(zip(visited_array)), columns=['Visited Museum Name'])
+		df_visited.index = np.arange(1, len(df_visited) + 1) 
+
+
+		#the actual recommendations
+		qrec = "(SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and Artist.name in (SELECT A.name FROM users U, likes2 L, artists A WHERE U.user_id = %s and U.user_id = L.user_id and L.artist_id = A.artist_id)) UNION (SELECT Art.title AS art_title, Artist.name AS artist_name, M.name AS mov_name, Mus.name AS mus_name FROM Artworks_is_at Art, Artists Artist, Creates C, Is_in1 I, movements M, Museums Mus WHERE Art.museum_id = Mus.museum_id and C.artist_id = Artist.artist_id and C.artwork_id = Art.artwork_id and I.name = M.name and I.artwork_id = Art.artwork_id and M.name in (SELECT M.name FROM users U, likes3 L, movements M WHERE U.user_id = %s and U.user_id = L.user_id and L.name = M.name))"
+		userrecquery = conn.execute(qrec, (loggedinid), (loggedinid)) 
+
+		userrec_art_title_list = []
+		userrec_artist_name_list = []
+		userrec_move_name_list = []
+		userrec_mus_name_list = []
+
+		for q in userrecquery:
+			userrec_art_title_list.append(q['art_title'])
+			userrec_artist_name_list.append(q['artist_name'])
+			userrec_move_name_list.append(q['mov_name'])
+			userrec_mus_name_list.append(q['mus_name'])
+
+		userrec_art_title_array = np.asarray(userrec_art_title_list)
+		userrec_artist_name_array = np.asarray(userrec_artist_name_list)
+		userrec_move_name_array = np.asarray(userrec_move_name_list)
+		userrec_mus_name_array = np.asarray(userrec_mus_name_list)
+
+
+		df_userrec = pd.DataFrame(list(zip(userrec_art_title_array, userrec_artist_name_array, userrec_move_name_array, userrec_mus_name_array)),columns=['Artwork Title', 'Artist Name', 'Movement Name', 'Museum Name'])
+		df_userrec.index = np.arange(1, len(df_userrec) + 1) 
+
+		context = update()
+		likemsg = "You have indicated that you like: "
+		recmsg = "Based on your preferences, we recommend these artworks: "
+		musmsg = "You have visited these museums: "
+
 		return render_template("index.html", userartworktable = df_artwork.to_html(), userartisttable = df_artist.to_html(), usermovementtable = df_movement.to_html(), uservisitedtable = df_visited.to_html(), userrectable = df_userrec.to_html(), likemessage = likemsg, recmessage = recmsg, musmessage = musmsg, **context)
 	else:
 		return redirect('/')
