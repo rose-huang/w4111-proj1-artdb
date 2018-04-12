@@ -591,18 +591,6 @@ def searchartistbymovement():
 	context = update()
 	return render_template("index.html", artisttable = df_artist.to_html(), **context)
 
-
-
-
-
-# Example of adding new data to the database
-#@app.route('/add', methods=['POST'])
-#def add():
-#	name = request.form['name']
-#	g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
-#	return redirect('/')
-
-
 @app.route('/login')
 def login():
 		abort(401)
