@@ -165,52 +165,56 @@ def adduser():
 	
 @app.route('/addartworkpref',methods=['POST'])
 def addartworkpref():
-	art_pref = request.form.get('art_pref')
-	art_prefs = art_pref.split(" - ")
-	art_pref_id = art_prefs[0] 
+	if loggedinid != 0:
+		art_pref = request.form.get('art_pref')
+		art_prefs = art_pref.split(" - ")
+		art_pref_id = art_prefs[0] 
 
-	pref = conn.execute("SELECT COUNT(*) FROM likes1 WHERE user_id = %s AND artwork_id = %s", loggedinid, art_pref_id)
-	for u in pref:
-		count = u[0]
-	if count == 0 and loggedinid != 0:
-		conn.execute("INSERT INTO likes1 VALUES (%s,%s)", loggedinid, art_pref_id)
+		pref = conn.execute("SELECT COUNT(*) FROM likes1 WHERE user_id = %s AND artwork_id = %s", loggedinid, art_pref_id)
+		for u in pref:
+			count = u[0]
+		if count == 0:
+			conn.execute("INSERT INTO likes1 VALUES (%s,%s)", loggedinid, art_pref_id)
 	return redirect('/')
 
 @app.route('/addartistpref',methods=['POST'])
 def addartistpref():
-	artist_pref = request.form.get('artist_pref')
-	artist_prefs = artist_pref.split(" - ")
-	artist_pref_id = artist_prefs[0] 
+	if loggedinid != 0:
+		artist_pref = request.form.get('artist_pref')
+		artist_prefs = artist_pref.split(" - ")
+		artist_pref_id = artist_prefs[0] 
 
-	pref = conn.execute("SELECT COUNT(*) FROM likes2 WHERE user_id = %s AND artist_id = %s", loggedinid, artist_pref_id)
-	for u in pref:
-		count = u[0]
-	if count == 0 and loggedinid != 0:
-		conn.execute("INSERT INTO likes2 VALUES (%s,%s)", loggedinid, artist_pref_id)
+		pref = conn.execute("SELECT COUNT(*) FROM likes2 WHERE user_id = %s AND artist_id = %s", loggedinid, artist_pref_id)
+		for u in pref:
+			count = u[0]
+		if count == 0:
+			conn.execute("INSERT INTO likes2 VALUES (%s,%s)", loggedinid, artist_pref_id)
 	return redirect('/')
 
 @app.route('/addmovementpref',methods=['POST'])
 def addmovementpref():
-	movement_pref = request.form.get('movement_pref')
+	if loggedinid != 0:
+		movement_pref = request.form.get('movement_pref')
 
-	pref = conn.execute("SELECT COUNT(*) FROM likes3 WHERE user_id = %s AND name = %s", loggedinid, movement_pref)
-	for u in pref:
-		count = u[0]
-	if count == 0 and loggedinid != 0:
-		conn.execute("INSERT INTO likes3 VALUES (%s,%s)", movement_pref, loggedinid)
+		pref = conn.execute("SELECT COUNT(*) FROM likes3 WHERE user_id = %s AND name = %s", loggedinid, movement_pref)
+		for u in pref:
+			count = u[0]
+		if count == 0:
+			conn.execute("INSERT INTO likes3 VALUES (%s,%s)", movement_pref, loggedinid)
 	return redirect('/')
 
 @app.route('/addvismus',methods=['POST'])
 def addvismus():
-	visited_mus = request.form.get('visited_mus')
-	visitedmuss = visited_mus.split(" - ")
-	visitedmus_id = visitedmuss[0] 
+	if loggedinid != 0:
+		visited_mus = request.form.get('visited_mus')
+		visitedmuss = visited_mus.split(" - ")
+		visitedmus_id = visitedmuss[0] 
 
-	pref = conn.execute("SELECT COUNT(*) FROM visited WHERE user_id = %s AND museum_id = %s", loggedinid, visitedmus_id)
-	for u in pref:
-		count = u[0]
-	if count == 0 and loggedinid != 0:
-		conn.execute("INSERT INTO visited VALUES (%s,%s)", loggedinid, visitedmus_id)
+		pref = conn.execute("SELECT COUNT(*) FROM visited WHERE user_id = %s AND museum_id = %s", loggedinid, visitedmus_id)
+		for u in pref:
+			count = u[0]
+		if count == 0:
+			conn.execute("INSERT INTO visited VALUES (%s,%s)", loggedinid, visitedmus_id)
 	return redirect('/')
 
 
